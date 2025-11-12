@@ -199,84 +199,132 @@
         body.dark-mode .toggle-circle {
             transform: translateX(25px);
         }
+
+        /* Emoji 飘落效果 */
+        .falling-emoji {
+            position: absolute;
+            top: -10px;
+            font-size: 24px;
+            color: var(--text-color);
+            pointer-events: none;
+            animation: fall 5s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
     </style>
 </head>
 <body class="dark-mode">
-<div class="theme-toggle-container">
-    <div class="theme-toggle" id="theme-toggle-btn">
-        <div class="toggle-circle"></div>
+    <div class="theme-toggle-container">
+        <div class="theme-toggle" id="theme-toggle-btn">
+            <div class="toggle-circle"></div>
+        </div>
     </div>
-</div>
 
-<div class="container">
-    <header class="profile-header">
-        <img src="avatar.png" alt="烈酒的个人头像" class="avatar">
-        <h1>烈酒</h1>
-        <p>一位热爱技术的探索者 | 欢迎来到我的导航页</p>
-    </header>
-    <section class="link-section">
-        <a href="https://github.com/lie-jiu" class="link-item" target="_blank">💻 GitHub</a>
-        <a href="https://oj.liejiu.top" class="link-item" target="_blank">🎈 在线评测系统</a>
-        <a href="https://blog.liejiu.top" class="link-item" target="_blank">📝 个人博客</a>
-        <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank">📧 联系邮箱</a>
-    </section>
-    <footer class="footer">
-        © 2025 烈酒 | 静态导航页
-    </footer>
-</div>
+    <div class="container">
+        <header class="profile-header">
+            <img src="avatar.png" alt="烈酒的个人头像" class="avatar">
+            <h1>烈酒</h1>
+            <p>一位热爱技术的探索者 | 欢迎来到我的导航页</p>
+        </header>
+        <section class="link-section">
+            <a href="https://github.com/lie-jiu" class="link-item" target="_blank">💻 GitHub</a>
+            <a href="https://oj.liejiu.top" class="link-item" target="_blank">🎈 在线评测系统</a>
+            <a href="https://blog.liejiu.top" class="link-item" target="_blank">📝 个人博客</a>
+            <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank">📧 联系邮箱</a>
+        </section>
+        <footer class="footer">
+            © 2025 烈酒 | 静态导航页
+        </footer>
+    </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const body = document.body;
-        const toggleBtn = document.getElementById('theme-toggle-btn');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const toggleBtn = document.getElementById('theme-toggle-btn');
 
-        // --- 1. 暗黑模式切换功能 ---
-        function toggleTheme() {
-            body.classList.toggle('dark-mode');
-            const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
-            localStorage.setItem('theme', currentTheme);
-        }
+            // --- 1. 暗黑模式切换功能 ---
+            function toggleTheme() {
+                body.classList.toggle('dark-mode');
+                const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+                localStorage.setItem('theme', currentTheme);
+            }
 
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            body.classList.remove('dark-mode');
-        } else if (savedTheme === 'dark') {
-            body.classList.add('dark-mode');
-        }
-        toggleBtn.addEventListener('click', toggleTheme);
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                body.classList.remove('dark-mode');
+            } else if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            }
+            toggleBtn.addEventListener('click', toggleTheme);
 
-        // --- 2. 鼠标拖尾效果 ---
-        const throttle = (func, limit) => {
-            let inThrottle;
-            return function() {
-                const args = arguments;
-                if (!inThrottle) {
-                    func.apply(this, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
-                }
+            // --- 2. 鼠标拖尾效果 ---
+            const throttle = (func, limit) => {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    if (!inThrottle) {
+                        func.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
             };
-        };
 
-        function handleMouseMove(e) {
-            const trail = document.createElement('div');
-            trail.className = 'mouse-trail';
-            document.body.appendChild(trail);
+            function handleMouseMove(e) {
+                const trail = document.createElement('div');
+                trail.className = 'mouse-trail';
+                document.body.appendChild(trail);
 
-            trail.style.left = e.clientX + 'px';
-            trail.style.top = e.clientY + 'px';
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
 
-            trail.getBoundingClientRect();
+                trail.getBoundingClientRect();
 
-            trail.classList.add('fade-out');
+                trail.classList.add('fade-out');
 
-            setTimeout(() => {
-                trail.remove();
-            }, 500);
-        }
+                setTimeout(() => {
+                    trail.remove();
+                }, 500);
+            }
 
-        window.addEventListener('mousemove', throttle(handleMouseMove, 50));
-    });
-</script>
+            window.addEventListener('mousemove', throttle(handleMouseMove, 50));
+
+            // --- 3. Emoji 飘落效果 ---
+            function createFallingEmoji() {
+                const emoji = document.createElement('div');
+                emoji.className = 'falling-emoji';
+                emoji.textContent = getRandomEmoji();
+                emoji.style.left = getRandomPosition() + 'px';
+                emoji.style.animationDuration = getRandomDuration() + 's';
+                document.body.appendChild(emoji);
+
+                setTimeout(() => {
+                    emoji.remove();
+                }, 5000);
+            }
+
+            function getRandomEmoji() {
+                const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '😊', '😇', '🥰', '😍', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '😎', '🤓', '🧐', '👀', '🤔', '🤗', '🥳', '🥸', '😎', '🤩', '🥳', '🎉', '🔥', '🌟', '✨', '💥', '❤️', '💖', '💙', '💚', '💛', '💜', '🖤', '❤️‍🔥', '🌈'];
+                return emojis[Math.floor(Math.random() * emojis.length)];
+            }
+
+            function getRandomPosition() {
+                return Math.random() * (window.innerWidth - 20);
+            }
+
+            function getRandomDuration() {
+                return 5 + Math.random() * 5;
+            }
+
+            setInterval(createFallingEmoji, 200);
+        });
+    </script>
 </body>
 </html>
