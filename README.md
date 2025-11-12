@@ -1,3 +1,4 @@
 # Launchpad
-![头像](avatar.png)
+![github头像](https://github.com/lie-jiu.png)
+
 烈酒的导航页
