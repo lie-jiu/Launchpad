@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>烈酒的个人导航页</title>
+    <style>
+        /* ---------------------------------------------------- */
+        /* 🎨 1. 主题变量和颜色定义 */
+        /* ---------------------------------------------------- */
+        :root {
+            /* 亮色模式变量 */
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333;
+            --header-color: #2c3e50;
+            --subtitle-color: #7f8c8d;
+            --link-bg: #3498db;
+            --link-hover-bg: #2980b9;
+            --footer-color: #bdc3c7;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --toggle-bg: #bdc3c7;
+            --toggle-circle: #ffffff;
+        }
+
+        /* 暗黑模式覆盖变量 */
+        body.dark-mode {
+            --bg-color: #1a1a2e;
+            --container-bg: #2c394b;
+            --text-color: #f0f0f0;
+            --header-color: #a4c6e0;
+            --subtitle-color: #95a5a6;
+            --link-bg: #4a698c;
+            --link-hover-bg: #607d9c;
+            --footer-color: #7f8c8d;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --toggle-bg: #555;
+            --toggle-circle: #f4f7f6;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 基础样式和布局 */
+        /* ---------------------------------------------------- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.5s, color 0.5s;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 容器样式 */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            text-align: center;
+            transition: background-color 0.5s, box-shadow 0.5s;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 👤 2. 头像样式 */
+        /* ---------------------------------------------------- */
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid var(--link-bg);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.5s;
+        }
+        .profile-header { margin-bottom: 30px; }
+        .profile-header h1 { color: var(--header-color); font-size: 2.2em; margin-bottom: 5px; transition: color 0.5s; }
+        .profile-header p { color: var(--subtitle-color); font-size: 1.1em; margin-top: 0; transition: color 0.5s; }
+        .link-section { display: grid; gap: 15px; }
+        .link-item { display: block; padding: 15px 25px; background-color: var(--link-bg); color: white; text-decoration: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; transition: background-color 0.3s, transform 0.1s; }
+        .link-item:hover { background-color: var(--link-hover-bg); transform: translateY(-2px); }
+        .footer { margin-top: 40px; font-size: 0.9em; color: var(--footer-color); transition: color 0.5s; }
+
+
+        /* ---------------------------------------------------- */
+        /* 🖱️ 3. 鼠标拖尾效果 */
+        /* ---------------------------------------------------- */
+        .mouse-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--link-bg);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .mouse-trail.fade-out {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        /* ---------------------------------------------------- */
+        /* 🌙 4. 暗黑模式开关样式*/
+        /* ---------------------------------------------------- */
+        .theme-toggle-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+        }
+
+        .theme-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 12.5px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.5s;
+        }
+
+        .theme-toggle:before {
+            content: '🌙';
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            z-index: 1;
+        }
+
+        .theme-toggle:after {
+            content: '☀️';
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            z-index: 1;
+        }
+
+        .toggle-circle {
+            width: 21px;
+            height: 21px;
+            background-color: var(--toggle-circle);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease, background-color 0.5s;
+            z-index: 2;
+        }
+
+        body.dark-mode .toggle-circle {
+            transform: translateX(25px);
+        }
+
+    </style>
+</head>
+<body class="dark-mode"> <div class="theme-toggle-container">
+    <div class="theme-toggle" id="theme-toggle-btn">
+        <div class="toggle-circle"></div>
+    </div>
+</div>
+
+<div class="container">
+    <header class="profile-header">
+        <img src="avatar.png" alt="烈酒的头像" class="avatar">
+        <h1>烈酒</h1>
+        <p>一位热爱技术的探索者 |
+
+            欢迎来到我的导航页</p>
+    </header>
+    <section class="link-section">
+        <a href="https://github.com/lie-jiu" class="link-item" target="_blank">💻 GitHub</a>
+        <a href="https://oj.liejiu.top" class="link-item" target="_blank">🎈 在线评测系统</a>
+        <a href="https://blog.liejiu.top" class="link-item" target="_blank">📝 个人博客</a>
+        <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank">📧 联系邮箱</a>
+    </section>
+    <footer class="footer">
+        © 2025 烈酒 | 静态导航页
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const body = document.body;
+        const toggleBtn = document.getElementById('theme-toggle-btn');
+
+        // --- 1. 暗黑模式切换功能 ---
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            body.classList.remove('dark-mode');
+        } else if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+        }
+        toggleBtn.addEventListener('click', toggleTheme);
+
+        // --- 2. 鼠标拖尾效果 ---
+        let trailThrottle = false;
+
+        function handleMouseMove(e) {
+            if (trailThrottle) return;
+            trailThrottle = true;
+
+            setTimeout(() => {
+                trailThrottle = false;
+            }, 50);
+
+            const trail = document.createElement('div');
+            trail.className = 'mouse-trail';
+            document.body.appendChild(trail);
+
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+
+            trail.getBoundingClientRect();
+
+            trail.classList.add('fade-out');
+
+            setTimeout(() => {
+                trail.remove();
+            }, 500);
+        }
+
+        window.addEventListener('mousemove', handleMouseMove);
+
+    });
+</script>
+</body>
+</html>
