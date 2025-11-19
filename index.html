@@ -1,330 +1,754 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>烈酒的个人导航页</title>
+    <meta name="description" content="个人导航页 - 连接我的数字世界">
+    <title>我的个人导航页 - 液态视差版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap"
+          rel="stylesheet">
     <style>
         /* ---------------------------------------------------- */
-        /* 🎨 1. 主题变量和颜色定义 */
+        /* 🎨 1. 全局变量定义 (Liquid Glassmorphism) */
         /* ---------------------------------------------------- */
         :root {
-            --primary-color: #f4f7f6;
-            --secondary-color: #ffffff;
-            --text-color: #333;
-            --header-color: #2c3e50;
-            --subtitle-color: #7f8c8d;
-            --link-bg: #3498db;
-            --link-hover-bg: #2980b9;
-            --footer-color: #bdc3c7;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --toggle-bg: #bdc3c7;
-            --toggle-circle: #ffffff;
+            /* 亮色模式 - 液态渐变背景色 */
+            --bg-liquid-1: #c3e2f7;
+            --bg-liquid-2: #e0f2f7;
+            --bg-liquid-3: #f0e6fa;
+
+            --liquid-glass-bg: rgba(255, 255, 255, 0.35);
+            --liquid-glass-border: 1px solid rgba(255, 255, 255, 0.2);
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+
+            /* 液态阴影 */
+            --card-shadow: 0 15px 50px rgba(31, 38, 135, 0.12);
+
+            --btn-bg: linear-gradient(135deg, #7c99e4 0%, #a7c1ed 100%);
+            --btn-hover-shadow: 0 10px 30px rgba(124, 153, 228, 0.35);
         }
 
-        /* 暗黑模式覆盖变量 */
+        /* 暗黑模式变量 */
         body.dark-mode {
-            --primary-color: #1a1a2e;
-            --secondary-color: #2c394b;
-            --text-color: #f0f0f0;
-            --header-color: #a4c6e0;
-            --subtitle-color: #95a5a6;
-            --link-bg: #4a698c;
-            --link-hover-bg: #607d9c;
-            --footer-color: #7f8c8d;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --toggle-bg: #555;
-            --toggle-circle: #f4f7f6;
+            --bg-liquid-1: #0f1c2b;
+            --bg-liquid-2: #1a2a3a;
+            --bg-liquid-3: #223545;
+
+            --liquid-glass-bg: rgba(20, 20, 30, 0.55);
+            --liquid-glass-border: 1px solid rgba(255, 255, 255, 0.05);
+            --text-main: #e0e7eb;
+            --text-sub: #b2bec3;
+
+            --card-shadow: 0 15px 50px rgba(0, 0, 0, 0.45);
+
+            --btn-bg: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            --btn-hover-shadow: 0 10px 30px rgba(75, 108, 183, 0.35);
         }
 
         /* ---------------------------------------------------- */
-        /* 基础样式和布局 */
+        /* 核心布局与动画 */
         /* ---------------------------------------------------- */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Noto Sans SC', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: var(--primary-color);
-            color: var(--text-color);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            transition: background-color 0.5s, color 0.5s;
-            position: relative;
-            overflow-x: hidden;
+            background: linear-gradient(-45deg, var(--bg-liquid-1), var(--bg-liquid-2), var(--bg-liquid-3), var(--bg-liquid-1));
+            background-size: 400% 400%;
+            animation: liquidGradientBG 30s ease infinite;
+            color: var(--text-main);
+            overflow: hidden;
+            transition: color 0.8s ease;
+            perspective: 1000px; /* 开启 3D 视差透视 */
         }
 
-        /* 容器样式 */
+        @keyframes liquidGradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 液态粒子背景 */
+        .liquid-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .liquid-particle {
+            position: absolute;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent);
+            border-radius: 50%;
+            animation: floatAndFade 30s ease-in-out infinite;
+            filter: blur(8px);
+        }
+
+        @keyframes floatAndFade {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(30vw) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* 液态毛玻璃卡片容器 */
         .container {
             position: relative;
             z-index: 10;
             width: 90%;
-            max-width: 600px;
-            padding: 40px;
-            background-color: var(--secondary-color);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px var(--shadow-color);
+            max-width: 500px;
+            padding: 45px 35px;
+
+            background: var(--liquid-glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: var(--liquid-glass-border);
+
+            border-radius: 35px;
+            box-shadow: var(--card-shadow);
             text-align: center;
-            transition: background-color 0.5s, box-shadow 0.5s;
+
+            /* 初始状态为不可见，由 JS 或 CSS 动画控制 */
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            animation: liquidPopIn 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+            /* 3D 属性 */
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow 0.8s, background 0.8s; /* 缩短 transform 时间以实现跟手 */
         }
 
-        /* 头像样式 */
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
+        @keyframes liquidPopIn {
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 头像区域 */
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
             margin-bottom: 20px;
-            border: 4px solid var(--link-bg);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            transition: border-color 0.5s;
         }
 
-        .profile-header {
-            margin-bottom: 30px;
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.25);
+            object-fit: cover;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            /* 恢复旋转效果 */
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.5s;
         }
 
-        .profile-header h1 {
-            color: var(--header-color);
+        .avatar-wrapper:hover .avatar {
+            /* 这里修改为旋转 */
+            transform: rotate(360deg) scale(1.1);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 状态徽章 */
+        .status-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: #2ecc71;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(46, 204, 113, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* ✨ 特性 3: 标题故障风 (Glitch) */
+        /* ---------------------------------------------------- */
+        h1 {
             font-size: 2.2em;
-            margin-bottom: 5px;
-            transition: color 0.5s;
+            margin: 10px 0;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
         }
 
-        .profile-header p {
-            color: var(--subtitle-color);
+        h1:hover::before,
+        h1:hover::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--liquid-glass-bg);
+            opacity: 0.8;
+        }
+
+        h1:hover::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            animation: glitch-anim 0.3s infinite linear alternate-reverse;
+        }
+
+        h1:hover::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+            animation: glitch-anim2 0.3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
+            }
+            20% {
+                clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%);
+            }
+            40% {
+                clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%);
+            }
+            60% {
+                clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+            }
+            80% {
+                clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%);
+            }
+            100% {
+                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
+            }
+        }
+
+        @keyframes glitch-anim2 {
+            0% {
+                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
+            }
+            20% {
+                clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%);
+            }
+            40% {
+                clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%);
+            }
+            60% {
+                clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%);
+            }
+            80% {
+                clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%);
+            }
+            100% {
+                clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);
+            }
+        }
+
+        .bio {
+            color: var(--text-sub);
             font-size: 1.1em;
-            margin-top: 0;
-            transition: color 0.5s;
+            margin-bottom: 35px;
+            min-height: 1.5em;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
+        /* 链接按钮区域 */
         .link-section {
-            display: grid;
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            /* 3D 深度效果 */
+            transform: translateZ(20px);
         }
 
         .link-item {
-            display: block;
-            padding: 15px 25px;
-            background-color: var(--link-bg);
-            color: white;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 18px;
+            border-radius: 20px;
             text-decoration: none;
-            border-radius: 8px;
+            color: white;
+            font-weight: 600;
             font-size: 1.1em;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.1s;
+            letter-spacing: 0.8px;
+            background: var(--btn-bg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUpLiquid 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .link-item:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        .link-item:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+
+        .link-item:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+
+        .link-item:nth-child(4) {
+            animation-delay: 1.0s;
+        }
+
+        @keyframes slideUpLiquid {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .link-item:hover {
-            background-color: var(--link-hover-bg);
-            transform: translateY(-2px);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: var(--btn-hover-shadow);
         }
 
+        .link-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 1s ease;
+        }
+
+        .link-item:hover::after {
+            left: 100%;
+        }
+
+        /* 页脚 */
         .footer {
-            margin-top: 40px;
+            margin-top: 45px;
             font-size: 0.9em;
-            color: var(--footer-color);
-            transition: color 0.5s;
+            color: var(--text-sub);
+            opacity: 0.6;
+            transition: opacity 0.5s;
+            transform: translateZ(10px);
         }
 
-        /* 鼠标拖尾效果 */
+        .footer:hover {
+            opacity: 1;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 装饰元素 & 新特性 CSS */
+        /* ---------------------------------------------------- */
+
+        /* 鼠标拖尾 */
         .mouse-trail {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background-color: var(--link-bg);
+            width: 12px;
+            height: 12px;
+            background: rgba(var(--text-main-rgb), 0.7);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
-
-        .mouse-trail.fade-out {
             opacity: 0;
-            transform: translate(-50%, -50%) scale(0.5);
+            transform: translate(-50%, -50%) scale(0);
+            animation: trailFadeInScale 0.6s forwards;
         }
 
-        /* 暗黑模式开关样式 */
-        .theme-toggle-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 20;
-        }
-
-        .theme-toggle {
-            width: 50px;
-            height: 25px;
-            background-color: var(--toggle-bg);
-            border-radius: 12.5px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.5s;
-        }
-
-        .theme-toggle:before {
-            content: '🌙';
-            position: absolute;
-            top: 50%;
-            left: 5px;
-            transform: translateY(-50%);
-            font-size: 14px;
-            z-index: 1;
-        }
-
-        .theme-toggle:after {
-            content: '☀️';
-            position: absolute;
-            top: 50%;
-            right: 5px;
-            transform: translateY(-50%);
-            font-size: 14px;
-            z-index: 1;
-        }
-
-        .toggle-circle {
-            width: 21px;
-            height: 21px;
-            background-color: var(--toggle-circle);
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s ease, background-color 0.5s;
-            z-index: 2;
-        }
-
-        body.dark-mode .toggle-circle {
-            transform: translateX(25px);
-        }
-
-        /* Emoji 飘落效果 */
-        .falling-emoji {
-            position: absolute;
-            top: -10px;
-            font-size: 24px;
-            color: var(--text-color);
-            pointer-events: none;
-            animation: fall 5s linear infinite;
-        }
-
-        @keyframes fall {
+        @keyframes trailFadeInScale {
             0% {
-                transform: translateY(0);
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(0.5);
             }
             100% {
-                transform: translateY(100vh);
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+        }
+
+        /* 主题切换按钮 */
+        .theme-switch {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: var(--liquid-glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            font-size: 1.3em;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .theme-switch:hover {
+            transform: scale(1.15);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 飘落 Emoji */
+        .falling-emoji {
+            position: fixed;
+            top: -60px;
+            font-size: 26px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.5;
+            animation: fallLiquid linear forwards;
+            filter: blur(0.5px);
+        }
+
+        @keyframes fallLiquid {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        /* ✨ 特性 2: 屏幕波纹 (Ripple) */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-anim 0.8s linear;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        @keyframes ripple-anim {
+            to {
+                transform: scale(6);
+                opacity: 0;
+            }
+        }
+
+        /* ✨ 特性 5: 极简音乐播放器 */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--liquid-glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .music-player:hover {
+            transform: scale(1.1);
+        }
+
+        .music-disc {
+            font-size: 24px;
+            animation: spin 4s linear infinite;
+            animation-play-state: paused; /* 默认暂停 */
+        }
+
+        .music-player.playing .music-disc {
+            animation-play-state: running;
+        }
+
+        .music-player.playing {
+            border-color: #2ecc71;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 35px 25px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 2em;
             }
         }
     </style>
 </head>
-<body class="dark-mode">
-    <div class="theme-toggle-container">
-        <div class="theme-toggle" id="theme-toggle-btn">
-            <div class="toggle-circle"></div>
+<body>
+
+<div class="liquid-particles" id="liquid-particles-container"></div>
+
+<div class="theme-switch" id="theme-toggle" title="切换主题">☀️</div>
+
+<div class="music-player" onclick="toggleMusic()" title="点击播放/暂停">
+    <div class="music-disc">🎵</div>
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<div class="container">
+    <header>
+        <div class="avatar-wrapper">
+            <img src="https://github.com/lie-jiu.png" alt="Avatar" class="avatar" id="avatar-img">
+            <div class="status-badge"></div>
         </div>
-    </div>
 
-    <div class="container">
-        <header class="profile-header">
-            <img src="https://github.com/lie-jiu.png" alt="烈酒的个人头像" class="avatar">
-            <h1>烈酒</h1>
-            <p>一位热爱技术的探索者 | 欢迎来到我的导航页</p>
-        </header>
-        <section class="link-section">
-            <a href="https://github.com/lie-jiu" class="link-item" target="_blank">💻 GitHub</a>
-            <a href="https://oj.liejiu.top" class="link-item" target="_blank">🎈 在线评测系统</a>
-            <a href="https://blog.liejiu.top" class="link-item" target="_blank">📝 个人博客</a>
-            <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank">📧 联系邮箱</a>
-        </section>
-        <footer class="footer">
-            © 2025 烈酒 | 静态导航页
-        </footer>
-    </div>
+        <h1 data-text="烈酒">烈酒</h1>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const body = document.body;
-            const toggleBtn = document.getElementById('theme-toggle-btn');
+        <p class="bio" id="typing-text"></p>
+    </header>
 
-            // --- 1. 暗黑模式切换功能 ---
-            function toggleTheme() {
-                body.classList.toggle('dark-mode');
-                const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
-                localStorage.setItem('theme', currentTheme);
-            }
+    <section class="link-section">
+        <a href="https://github.com/lie-jiu" class="link-item" target="_blank">
+            <span>💻 GitHub</span>
+        </a>
+        <a href="https://oj.liejiu.top" class="link-item" target="_blank">
+            <span>🎈 在线评测系统</span>
+        </a>
+        <a href="https://blog.liejiu.top" class="link-item" target="_blank">
+            <span>📝 个人博客</span>
+        </a>
+        <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank">
+            <span>📧 发送邮件</span>
+        </a>
+    </section>
 
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                body.classList.remove('dark-mode');
-            } else if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-            }
-            toggleBtn.addEventListener('click', toggleTheme);
+    <footer class="footer">
+        © 2025 Made with ❤️ by LieJiu
+    </footer>
+</div>
 
-            // --- 2. 鼠标拖尾效果 ---
-            const throttle = (func, limit) => {
-                let inThrottle;
-                return function() {
-                    const args = arguments;
-                    if (!inThrottle) {
-                        func.apply(this, args);
-                        inThrottle = true;
-                        setTimeout(() => inThrottle = false, limit);
-                    }
-                };
-            };
+<script>
+    // ----------------------------------------------------
+    // ⚙️ 配置区域
+    // ----------------------------------------------------
+    const config = {
+        githubUsername: "lie-jiu",
+        typingText: "缓慢而优雅，沉浸在代码的流动中... 🌊",
+        typingSpeed: 150, // 慵懒打字速度
+        liquidEmojis: ['💧', '✨', '🫧', '💎', '🐳', '🪁', '❄️', '🌊'],
+        numParticles: 12
+    };
 
-            function handleMouseMove(e) {
-                const trail = document.createElement('div');
-                trail.className = 'mouse-trail';
-                document.body.appendChild(trail);
+    // 1. 自动设置头像
+    document.getElementById('avatar-img').src = `https://github.com/${config.githubUsername}.png`;
 
-                trail.style.left = e.clientX + 'px';
-                trail.style.top = e.clientY + 'px';
+    // 2. 打字机效果
+    const typingElement = document.getElementById('typing-text');
+    let charIndex = 0;
 
-                trail.getBoundingClientRect();
+    function typeWriter() {
+        if (charIndex < config.typingText.length) {
+            typingElement.textContent += config.typingText.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeWriter, config.typingSpeed);
+        }
+    }
 
-                trail.classList.add('fade-out');
+    window.onload = () => setTimeout(typeWriter, 1200);
 
-                setTimeout(() => {
-                    trail.remove();
-                }, 500);
-            }
+    // 3. 暗黑模式切换
+    const toggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
 
-            window.addEventListener('mousemove', throttle(handleMouseMove, 50));
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggleBtn.textContent = '🌙';
+    }
 
-            // --- 3. Emoji 飘落效果 ---
-            function createFallingEmoji() {
-                const emoji = document.createElement('div');
-                emoji.className = 'falling-emoji';
-                emoji.textContent = getRandomEmoji();
-                emoji.style.left = getRandomPosition() + 'px';
-                emoji.style.animationDuration = getRandomDuration() + 's';
-                document.body.appendChild(emoji);
+    toggleBtn.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        toggleBtn.textContent = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
 
-                setTimeout(() => {
-                    emoji.remove();
-                }, 5000);
-            }
+    // 4. 鼠标拖尾
+    let isDrawing = false;
+    document.addEventListener('mousemove', (e) => {
+        if (isDrawing) return;
+        isDrawing = true;
+        setTimeout(() => {
+            isDrawing = false;
+        }, 60);
 
-            function getRandomEmoji() {
-                const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '😊', '😇', '🥰', '😍', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '😎', '🤓', '🧐', '👀', '🤔', '🤗', '🥳', '🥸', '😎', '🤩', '🥳', '🎉', '🔥', '🌟', '✨', '💥', '❤️', '💖', '💙', '💚', '💛', '💜', '🖤', '❤️‍🔥', '🌈'];
-                return emojis[Math.floor(Math.random() * emojis.length)];
-            }
+        const trail = document.createElement('div');
+        trail.className = 'mouse-trail';
+        trail.style.left = `${e.clientX}px`;
+        trail.style.top = `${e.clientY}px`;
 
-            function getRandomPosition() {
-                return Math.random() * (window.innerWidth - 20);
-            }
+        const hue = Math.random() * 360;
+        const isDark = body.classList.contains('dark-mode');
+        trail.style.background = `hsla(${hue}, 60%, ${isDark ? '60%' : '80%'}, 0.6)`;
 
-            function getRandomDuration() {
-                return 5 + Math.random() * 5;
-            }
+        document.body.appendChild(trail);
+        setTimeout(() => {
+            trail.remove();
+        }, 800);
+    });
 
-            setInterval(createFallingEmoji, 200);
+    // 5. Emoji 飘落
+    function createEmoji() {
+        const emoji = document.createElement('div');
+        emoji.className = 'falling-emoji';
+        emoji.innerText = config.liquidEmojis[Math.floor(Math.random() * config.liquidEmojis.length)];
+        emoji.style.left = Math.random() * 100 + 'vw';
+        emoji.style.animationDuration = (Math.random() * 7 + 8) + 's';
+        emoji.style.opacity = Math.random() * 0.3 + 0.1;
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 15000);
+    }
+
+    setInterval(createEmoji, 1200);
+
+    // 6. 背景粒子
+    const particlesContainer = document.getElementById('liquid-particles-container');
+
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'liquid-particle';
+        const size = Math.random() * 100 + 50;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 100 + 100}vh`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particle.style.animationDuration = `${Math.random() * 20 + 25}s`;
+        particlesContainer.appendChild(particle);
+        setTimeout(() => particle.remove(), 50000);
+    }
+
+    for (let i = 0; i < config.numParticles; i++) {
+        createParticle();
+    }
+
+    // ----------------------------------------------------
+    // ✨ 新增功能逻辑
+    // ----------------------------------------------------
+
+
+    // ----------------------------------------------------
+    // ✨ 特性 1: 3D 视差悬浮 (方向修正版)
+    // ----------------------------------------------------
+    const container = document.querySelector('.container');
+
+    // 等待 1.5秒，确保进场动画完全结束
+    setTimeout(() => {
+        // 1. 锁定当前状态，防止移除动画后消失
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0) scale(1)';
+
+        // 2. 移除 CSS 动画，释放控制权
+        container.style.animation = 'none';
+
+        document.addEventListener('mousemove', (e) => {
+            // 灵敏度：数值越小，倾斜越剧烈
+            const sensitivity = 25;
+
+            const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
+
+            // 🔧 修复核心：调整了这里的正负号
+            // -xAxis 让左右倾斜反转
+            // yAxis  保持正值让上方被压下去
+            container.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg) scale(1)`;
         });
-    </script>
+
+        // 鼠标移出复位
+        document.addEventListener('mouseleave', () => {
+            container.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+            container.style.transition = 'transform 0.5s ease';
+        });
+
+        // 鼠标进入时取消过渡，实现跟手
+        document.addEventListener('mouseenter', () => {
+            container.style.transition = 'transform 0.1s ease-out';
+        });
+
+    }, 1500);
+
+    // ✨ 特性 2: 屏幕点击波纹
+    document.addEventListener('click', function (e) {
+        // 避免点击播放器或链接时触发大波纹遮挡
+        if (e.target.closest('.music-player') || e.target.closest('a')) return;
+
+        const ripple = document.createElement('div');
+        ripple.classList.add('ripple');
+        document.body.appendChild(ripple);
+
+        const size = 120; // 波纹大小
+        ripple.style.width = size + 'px';
+        ripple.style.height = size + 'px';
+        ripple.style.left = e.clientX - size / 2 + 'px';
+        ripple.style.top = e.clientY - size / 2 + 'px';
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 800);
+    });
+
+    // ✨ 特性 5: 音乐播放器控制
+    function toggleMusic() {
+        const audio = document.getElementById('bg-music');
+        const player = document.querySelector('.music-player');
+        if (audio.paused) {
+            audio.play().catch(error => console.log("Playback prevented by browser settings"));
+            player.classList.add('playing');
+        } else {
+            audio.pause();
+            player.classList.remove('playing');
+        }
+    }
+</script>
 </body>
 </html>
