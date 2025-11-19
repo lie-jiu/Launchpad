@@ -459,7 +459,7 @@
     // 配置参数
     const config = {
         githubUsername: "lie-jiu",
-        typingText: "缓慢而优雅，沉浸在代码的流动中... 🌊",
+        typingText: "孤岛未相逢",
         typingSpeed: 150,
         liquidEmojis: ['💧', '✨', '🫧', '💎', '🐳', '🪁', '❄️', '🌊'],
         numParticles: 12
@@ -530,7 +530,7 @@
         setTimeout(() => emoji.remove(), 15000);
     }
 
-    setInterval(createEmoji, 1200);
+    setInterval(createEmoji, 500);
 
     // 背景粒子效果
     const particlesContainer = document.getElementById('liquid-particles-container');
@@ -599,7 +599,7 @@
         const audio = document.getElementById('bg-music');
         const player = document.querySelector('.music-player');
         if (audio.paused) {
-            audio.play().catch(error => console.log("Playback prevented by browser settings"));
+            audio.play().catch(error => console.log("音乐播放被浏览器阻止"));
             player.classList.add('playing');
         } else {
             audio.pause();
