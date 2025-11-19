@@ -5,26 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="个人导航页 - 连接我的数字世界">
     <title>烈酒个人导航页</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap"
-          rel="stylesheet">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* ---------------------------------------------------- */
-        /* 🎨 1. 全局变量定义 (Liquid Glassmorphism) */
-        /* ---------------------------------------------------- */
+        /* 定义全局变量 (液态玻璃风格) */
         :root {
-            /* 亮色模式 - 液态渐变背景色 */
+            /* 亮色模式背景色 */
             --bg-liquid-1: #c3e2f7;
             --bg-liquid-2: #e0f2f7;
             --bg-liquid-3: #f0e6fa;
-
             --liquid-glass-bg: rgba(255, 255, 255, 0.35);
             --liquid-glass-border: 1px solid rgba(255, 255, 255, 0.2);
             --text-main: #2d3436;
             --text-sub: #636e72;
-
-            /* 液态阴影 */
             --card-shadow: 0 15px 50px rgba(31, 38, 135, 0.12);
-
             --btn-bg: linear-gradient(135deg, #7c99e4 0%, #a7c1ed 100%);
             --btn-hover-shadow: 0 10px 30px rgba(124, 153, 228, 0.35);
         }
@@ -34,21 +28,16 @@
             --bg-liquid-1: #0f1c2b;
             --bg-liquid-2: #1a2a3a;
             --bg-liquid-3: #223545;
-
             --liquid-glass-bg: rgba(20, 20, 30, 0.55);
             --liquid-glass-border: 1px solid rgba(255, 255, 255, 0.05);
             --text-main: #e0e7eb;
             --text-sub: #b2bec3;
-
             --card-shadow: 0 15px 50px rgba(0, 0, 0, 0.45);
-
             --btn-bg: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
             --btn-hover-shadow: 0 10px 30px rgba(75, 108, 183, 0.35);
         }
 
-        /* ---------------------------------------------------- */
-        /* 核心布局与动画 */
-        /* ---------------------------------------------------- */
+        /* 基础样式 */
         * {
             box-sizing: border-box;
         }
@@ -66,19 +55,12 @@
             color: var(--text-main);
             overflow: hidden;
             transition: color 0.8s ease;
-            perspective: 1000px; /* 开启 3D 视差透视 */
+            perspective: 1000px; /* 启用3D视差 */
         }
 
         @keyframes liquidGradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         /* 液态粒子背景 */
@@ -100,51 +82,34 @@
         }
 
         @keyframes floatAndFade {
-            0% {
-                transform: translateY(0) translateX(0) scale(1);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-110vh) translateX(30vw) scale(2);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) translateX(30vw) scale(2); opacity: 0; }
         }
 
-        /* 液态毛玻璃卡片容器 */
+        /* 液态毛玻璃卡片 */
         .container {
             position: relative;
             z-index: 10;
             width: 90%;
             max-width: 500px;
             padding: 45px 35px;
-
             background: var(--liquid-glass-bg);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border: var(--liquid-glass-border);
-
             border-radius: 35px;
             box-shadow: var(--card-shadow);
             text-align: center;
-
-            /* 初始状态为不可见，由 JS 或 CSS 动画控制 */
             opacity: 0;
             transform: translateY(30px) scale(0.9);
             animation: liquidPopIn 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-
-            /* 3D 属性 */
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out, box-shadow 0.8s, background 0.8s; /* 缩短 transform 时间以实现跟手 */
+            transition: transform 0.1s ease-out, box-shadow 0.8s, background 0.8s;
         }
 
         @keyframes liquidPopIn {
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* 头像区域 */
@@ -161,12 +126,10 @@
             border: 4px solid rgba(255, 255, 255, 0.25);
             object-fit: cover;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            /* 恢复旋转效果 */
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.5s;
         }
 
         .avatar-wrapper:hover .avatar {
-            /* 这里修改为旋转 */
             transform: rotate(360deg) scale(1.1);
             border-color: rgba(255, 255, 255, 0.8);
         }
@@ -185,20 +148,12 @@
         }
 
         @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6);
-            }
-            70% {
-                box-shadow: 0 0 0 15px rgba(46, 204, 113, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
-            }
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
         }
 
-        /* ---------------------------------------------------- */
-        /* ✨ 特性 3: 标题故障风 (Glitch) */
-        /* ---------------------------------------------------- */
+        /* 标题故障风效果 */
         h1 {
             font-size: 2.2em;
             margin: 10px 0;
@@ -235,45 +190,21 @@
         }
 
         @keyframes glitch-anim {
-            0% {
-                clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
-            }
-            20% {
-                clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%);
-            }
-            40% {
-                clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%);
-            }
-            60% {
-                clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
-            }
-            80% {
-                clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%);
-            }
-            100% {
-                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
-            }
+            0% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
+            20% { clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%); }
+            40% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
+            60% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
+            80% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); }
+            100% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
         }
 
         @keyframes glitch-anim2 {
-            0% {
-                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
-            }
-            20% {
-                clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%);
-            }
-            40% {
-                clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%);
-            }
-            60% {
-                clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%);
-            }
-            80% {
-                clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%);
-            }
-            100% {
-                clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);
-            }
+            0% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
+            20% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
+            40% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
+            60% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
+            80% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); }
+            100% { clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0); }
         }
 
         .bio {
@@ -290,7 +221,6 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            /* 3D 深度效果 */
             transform: translateZ(20px);
         }
 
@@ -315,27 +245,8 @@
             animation: slideUpLiquid 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        .link-item:nth-child(1) {
-            animation-delay: 0.4s;
-        }
-
-        .link-item:nth-child(2) {
-            animation-delay: 0.6s;
-        }
-
-        .link-item:nth-child(3) {
-            animation-delay: 0.8s;
-        }
-
-        .link-item:nth-child(4) {
-            animation-delay: 1.0s;
-        }
-
         @keyframes slideUpLiquid {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .link-item:hover {
@@ -372,10 +283,6 @@
             opacity: 1;
         }
 
-        /* ---------------------------------------------------- */
-        /* 装饰元素 & 新特性 CSS */
-        /* ---------------------------------------------------- */
-
         /* 鼠标拖尾 */
         .mouse-trail {
             position: fixed;
@@ -391,14 +298,8 @@
         }
 
         @keyframes trailFadeInScale {
-            0% {
-                opacity: 0.6;
-                transform: translate(-50%, -50%) scale(0.5);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(1.5);
-            }
+            0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.5); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
         }
 
         /* 主题切换按钮 */
@@ -440,15 +341,10 @@
         }
 
         @keyframes fallLiquid {
-            0% {
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                transform: translateY(110vh) rotate(360deg);
-            }
+            to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* ✨ 特性 2: 屏幕波纹 (Ripple) */
+        /* 屏幕波纹 */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -460,13 +356,10 @@
         }
 
         @keyframes ripple-anim {
-            to {
-                transform: scale(6);
-                opacity: 0;
-            }
+            to { transform: scale(6); opacity: 0; }
         }
 
-        /* ✨ 特性 5: 极简音乐播放器 */
+        /* 音乐播放器 */
         .music-player {
             position: fixed;
             bottom: 30px;
@@ -493,7 +386,7 @@
         .music-disc {
             font-size: 24px;
             animation: spin 4s linear infinite;
-            animation-play-state: paused; /* 默认暂停 */
+            animation-play-state: paused;
         }
 
         .music-player.playing .music-disc {
@@ -506,29 +399,25 @@
         }
 
         @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
+        /* 响应式设计 */
         @media (max-width: 600px) {
-            .container {
-                padding: 35px 25px;
-                width: 90%;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
+            .container { padding: 35px 25px; width: 90%; }
+            h1 { font-size: 2em; }
         }
     </style>
 </head>
 <body>
 
+<!-- 液态粒子背景容器 -->
 <div class="liquid-particles" id="liquid-particles-container"></div>
 
+<!-- 主题切换按钮 -->
 <div class="theme-switch" id="theme-toggle" title="切换主题">☀️</div>
 
+<!-- 音乐播放器 -->
 <div class="music-player" onclick="toggleMusic()" title="点击播放/暂停">
     <div class="music-disc">🎵</div>
     <audio id="bg-music" loop>
@@ -536,54 +425,50 @@
     </audio>
 </div>
 
+<!-- 主要内容容器 -->
 <div class="container">
     <header>
+        <!-- 头像及状态徽章 -->
         <div class="avatar-wrapper">
             <img src="https://github.com/lie-jiu.png" alt="Avatar" class="avatar" id="avatar-img">
             <div class="status-badge"></div>
         </div>
 
+        <!-- 标题 -->
         <h1 data-text="烈酒">烈酒</h1>
 
+        <!-- 生活简介 -->
         <p class="bio" id="typing-text"></p>
     </header>
 
+    <!-- 快捷链接 -->
     <section class="link-section">
-        <a href="https://github.com/lie-jiu" class="link-item" target="_blank">
-            <span>💻 GitHub</span>
-        </a>
-        <a href="https://oj.liejiu.top" class="link-item" target="_blank">
-            <span>🎈 在线评测</span>
-        </a>
-        <a href="https://blog.liejiu.top" class="link-item" target="_blank">
-            <span>📝 个人博客</span>
-        </a>
-        <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank">
-            <span>📧 发送邮件</span>
-        </a>
+        <a href="https://github.com/lie-jiu" class="link-item" target="_blank"><span>💻 GitHub</span></a>
+        <a href="https://oj.liejiu.top" class="link-item" target="_blank"><span>🎈 在线评测</span></a>
+        <a href="https://blog.liejiu.top" class="link-item" target="_blank"><span>📝 个人博客</span></a>
+        <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank"><span>📧 发送邮件</span></a>
     </section>
 
+    <!-- 页脚信息 -->
     <footer class="footer">
         © 2025 Made with ❤️ by LieJiu
     </footer>
 </div>
 
 <script>
-    // ----------------------------------------------------
-    // ⚙️ 配置区域
-    // ----------------------------------------------------
+    // 配置参数
     const config = {
         githubUsername: "lie-jiu",
         typingText: "缓慢而优雅，沉浸在代码的流动中... 🌊",
-        typingSpeed: 150, // 慵懒打字速度
+        typingSpeed: 150,
         liquidEmojis: ['💧', '✨', '🫧', '💎', '🐳', '🪁', '❄️', '🌊'],
         numParticles: 12
     };
 
-    // 1. 自动设置头像
+    // 设置头像
     document.getElementById('avatar-img').src = `https://github.com/${config.githubUsername}.png`;
 
-    // 2. 打字机效果
+    // 打字机效果
     const typingElement = document.getElementById('typing-text');
     let charIndex = 0;
 
@@ -597,7 +482,7 @@
 
     window.onload = () => setTimeout(typeWriter, 1200);
 
-    // 3. 暗黑模式切换
+    // 主题切换
     const toggleBtn = document.getElementById('theme-toggle');
     const body = document.body;
 
@@ -613,14 +498,12 @@
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // 4. 鼠标拖尾
+    // 鼠标拖尾
     let isDrawing = false;
     document.addEventListener('mousemove', (e) => {
         if (isDrawing) return;
         isDrawing = true;
-        setTimeout(() => {
-            isDrawing = false;
-        }, 60);
+        setTimeout(() => isDrawing = false, 60);
 
         const trail = document.createElement('div');
         trail.className = 'mouse-trail';
@@ -632,12 +515,10 @@
         trail.style.background = `hsla(${hue}, 60%, ${isDark ? '60%' : '80%'}, 0.6)`;
 
         document.body.appendChild(trail);
-        setTimeout(() => {
-            trail.remove();
-        }, 800);
+        setTimeout(() => trail.remove(), 800);
     });
 
-    // 5. Emoji 飘落
+    // 随机飘落的Emoji
     function createEmoji() {
         const emoji = document.createElement('div');
         emoji.className = 'falling-emoji';
@@ -651,7 +532,7 @@
 
     setInterval(createEmoji, 1200);
 
-    // 6. 背景粒子
+    // 背景粒子效果
     const particlesContainer = document.getElementById('liquid-particles-container');
 
     function createParticle() {
@@ -672,72 +553,48 @@
         createParticle();
     }
 
-    // ----------------------------------------------------
-    // ✨ 新增功能逻辑
-    // ----------------------------------------------------
-
-
-    // ----------------------------------------------------
-    // ✨ 特性 1: 3D 视差悬浮 (方向修正版)
-    // ----------------------------------------------------
+    // 3D 视差效果
     const container = document.querySelector('.container');
-
-    // 等待 1.5秒，确保进场动画完全结束
     setTimeout(() => {
-        // 1. 锁定当前状态，防止移除动画后消失
         container.style.opacity = '1';
         container.style.transform = 'translateY(0) scale(1)';
-
-        // 2. 移除 CSS 动画，释放控制权
         container.style.animation = 'none';
 
         document.addEventListener('mousemove', (e) => {
-            // 灵敏度：数值越小，倾斜越剧烈
             const sensitivity = 25;
-
             const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
             const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
-
-            // 🔧 修复核心：调整了这里的正负号
-            // -xAxis 让左右倾斜反转
-            // yAxis  保持正值让上方被压下去
             container.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg) scale(1)`;
         });
 
-        // 鼠标移出复位
         document.addEventListener('mouseleave', () => {
             container.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
             container.style.transition = 'transform 0.5s ease';
         });
 
-        // 鼠标进入时取消过渡，实现跟手
         document.addEventListener('mouseenter', () => {
             container.style.transition = 'transform 0.1s ease-out';
         });
-
     }, 1500);
 
-    // ✨ 特性 2: 屏幕点击波纹
+    // 点击屏幕生成波纹
     document.addEventListener('click', function (e) {
-        // 避免点击播放器或链接时触发大波纹遮挡
         if (e.target.closest('.music-player') || e.target.closest('a')) return;
 
         const ripple = document.createElement('div');
         ripple.classList.add('ripple');
         document.body.appendChild(ripple);
 
-        const size = 120; // 波纹大小
+        const size = 120;
         ripple.style.width = size + 'px';
         ripple.style.height = size + 'px';
         ripple.style.left = e.clientX - size / 2 + 'px';
         ripple.style.top = e.clientY - size / 2 + 'px';
 
-        setTimeout(() => {
-            ripple.remove();
-        }, 800);
+        setTimeout(() => ripple.remove(), 800);
     });
 
-    // ✨ 特性 5: 音乐播放器控制
+    // 音乐播放器控制
     function toggleMusic() {
         const audio = document.getElementById('bg-music');
         const player = document.querySelector('.music-player');
