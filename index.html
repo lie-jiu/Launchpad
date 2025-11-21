@@ -827,6 +827,52 @@
     initParticles();
     animateParticles();
 
+    // 按钮吸附效果
+    const buttons = document.querySelectorAll('.link-item');
+
+    buttons.forEach(btn => {
+        const span = btn.querySelector('span');
+
+        btn.addEventListener('mousemove', (e) => {
+            // 1. 获取位置
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            // 2. 【关键修复】停止动画的同时，强制保持不透明
+            btn.style.animation = 'none';
+            btn.style.opacity = '1'; // 👈 加上这一行，按钮就不会消失了！
+
+            // 3. 磁力计算
+            const strength = 0.4;
+            const moveX = x * strength;
+            const moveY = y * strength - 6; // -6 是为了保留悬停时的上浮感
+
+            // 4. 快速响应移动
+            btn.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s';
+            btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+
+            // 5. 文字视差
+            if(span) {
+                span.style.transition = 'transform 0.1s ease-out';
+                span.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+            }
+        });
+
+        btn.addEventListener('mouseleave', (e) => {
+            // 1. 恢复原本的慢速弹性过渡
+            btn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s';
+
+            // 2. 清除 JS 样式，让 CSS 接管
+            btn.style.transform = '';
+            // 注意：这里不要清除 opacity，否则它又会变回 CSS 默认的 0
+
+            if(span) {
+                span.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                span.style.transform = '';
+            }
+        });
+    });
 </script>
 </body>
 </html>
