@@ -22,6 +22,8 @@
             --btn-hover-shadow: 0 10px 30px rgba(124, 153, 228, 0.35);
             --line-color: rgba(45, 52, 54, 0.08); /* 新增：线条颜色 */
             --visualizer-color: #2d3436; /* 新增：律动条颜色 */
+            /* 新增：定义 RGB 分量用于 JS 中的鼠标拖尾效果 */
+            --text-main-rgb-comp: 45, 52, 54; /* #2d3436 的 RGB 值 */
         }
 
         /* 暗黑模式变量 */
@@ -38,6 +40,8 @@
             --btn-hover-shadow: 0 10px 30px rgba(75, 108, 183, 0.35);
             --line-color: rgba(224, 231, 235, 0.08); /* 新增：暗色模式线条颜色 */
             --visualizer-color: #e0e7eb;
+            /* 新增：定义 RGB 分量用于 JS 中的鼠标拖尾效果 */
+            --text-main-rgb-comp: 224, 231, 235; /* #e0e7eb 的 RGB 值 */
         }
 
         /* 基础样式 */
@@ -302,7 +306,7 @@
             position: fixed;
             width: 12px;
             height: 12px;
-            background: rgba(var(--text-main-rgb), 0.7);
+            /* 移除错误的 CSS 变量引用，将在 JS 中动态设置颜色 */
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
@@ -490,7 +494,7 @@
 <div class="container">
     <header>
         <div class="avatar-wrapper">
-            <img src="https://github.com/lie-jiu.png" alt="Avatar" class="avatar" id="avatar-img">
+            <img src="avatar.png" alt="Avatar" class="avatar" id="avatar-img">
             <div class="status-badge"></div>
         </div>
 
@@ -520,9 +524,6 @@
         liquidEmojis: ['💧', '✨', '🫧', '💎', '🐳', '🪁', '❄️', '🌊'],
         numParticles: 12
     };
-
-    // 设置头像
-    document.getElementById('avatar-img').src = `https://github.com/${config.githubUsername}.png`;
 
     // 打字机效果
     const typingElement = document.getElementById('typing-text');
@@ -554,7 +555,7 @@
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // 鼠标拖尾
+    // 鼠标拖尾 (已修复)
     let isDrawing = false;
     document.addEventListener('mousemove', (e) => {
         if (isDrawing) return;
@@ -566,9 +567,18 @@
         trail.style.left = `${e.clientX}px`;
         trail.style.top = `${e.clientY}px`;
 
+        // **修复点：使用 getComputedStyle 获取预定义的 RGB 分量变量**
+        const rgbComponents = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
+
+        // 随机色相的 HSL (保留了原代码中的随机色相逻辑)
         const hue = Math.random() * 360;
         const isDark = body.classList.contains('dark-mode');
-        trail.style.background = `hsla(${hue}, 60%, ${isDark ? '60%' : '80%'}, 0.6)`;
+        // 使用 HSL 创建一个带随机色相的半透明颜色
+        // trail.style.background = `hsla(${hue}, 60%, ${isDark ? '60%' : '80%'}, 0.6)`;
+
+        // 或者使用主题颜色作为基色，并应用透明度
+        trail.style.background = `rgba(${rgbComponents}, 0.7)`;
+
 
         document.body.appendChild(trail);
         setTimeout(() => trail.remove(), 800);
