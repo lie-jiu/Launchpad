@@ -466,6 +466,35 @@
             .container { padding: 35px 25px; width: 90%; }
             h1 { font-size: 2em; }
         }
+        /* --- 新增：备案信息样式 --- */
+        .beian-container {
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* 小屏幕自动换行 */
+            gap: 15px;       /* 两个备案号之间的间距 */
+        }
+
+        .beian-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit; /* 继承页脚原本的颜色 */
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .beian-link:hover {
+            color: var(--text-main); /* 悬停时变深色 */
+            transform: translateY(-2px);
+        }
+
+        .beian-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -511,7 +540,18 @@
     </section>
 
     <footer class="footer">
-        © 2025 Made with ❤️ by LieJiu
+        <div>© 2025 Made with ❤️ by LieJiu</div>
+
+        <div class="beian-container">
+            <a href="https://beian.miit.gov.cn/" target="_blank" class="beian-link">
+                赣ICP备2025076709号-1
+            </a>
+
+            <a href="https://beian.mps.gov.cn/#/query/webSearch?code=36110402000194" rel="noreferrer" target="_blank" class="beian-link">
+                <img src="备案图标.png" alt="公安备案图标" class="beian-icon">
+                赣公网安备36110402000194号
+            </a>
+        </div>
     </footer>
 </div>
 
