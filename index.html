@@ -2,10 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="烈酒云">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="烈酒云" name="description">
     <title>烈酒云</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap"
+          rel="stylesheet">
     <style>
         /* 定义全局变量 (液态玻璃风格) */
         :root {
@@ -66,8 +67,12 @@
         }
 
         @keyframes liquidGradientBG {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         /* 新增：交互式线条画布 */
@@ -100,9 +105,17 @@
         }
 
         @keyframes floatAndFade {
-            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-            20% { opacity: 0.6; }
-            100% { transform: translateY(-110vh) translateX(30vw) scale(2); opacity: 0; }
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(30vw) scale(2);
+                opacity: 0;
+            }
         }
 
         /* 液态毛玻璃卡片 */
@@ -127,7 +140,10 @@
         }
 
         @keyframes liquidPopIn {
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         /* 头像区域 */
@@ -166,9 +182,15 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); }
-            70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(46, 204, 113, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+            }
         }
 
         /* 标题故障风效果 */
@@ -208,21 +230,45 @@
         }
 
         @keyframes glitch-anim {
-            0% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
-            20% { clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%); }
-            40% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
-            60% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
-            80% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); }
-            100% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
+            0% {
+                clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
+            }
+            20% {
+                clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%);
+            }
+            40% {
+                clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%);
+            }
+            60% {
+                clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+            }
+            80% {
+                clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%);
+            }
+            100% {
+                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
+            }
         }
 
         @keyframes glitch-anim2 {
-            0% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
-            20% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
-            40% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
-            60% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
-            80% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); }
-            100% { clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0); }
+            0% {
+                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
+            }
+            20% {
+                clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%);
+            }
+            40% {
+                clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%);
+            }
+            60% {
+                clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%);
+            }
+            80% {
+                clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%);
+            }
+            100% {
+                clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);
+            }
         }
 
         .bio {
@@ -264,7 +310,10 @@
         }
 
         @keyframes slideUpLiquid {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .link-item:hover {
@@ -316,8 +365,14 @@
         }
 
         @keyframes trailFadeInScale {
-            0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.5); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+            0% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
         }
 
         /* 主题切换按钮 */
@@ -359,7 +414,9 @@
         }
 
         @keyframes fallLiquid {
-            to { transform: translateY(110vh) rotate(360deg); }
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
         }
 
         /* 屏幕波纹 */
@@ -374,7 +431,10 @@
         }
 
         @keyframes ripple-anim {
-            to { transform: scale(6); opacity: 0; }
+            to {
+                transform: scale(6);
+                opacity: 0;
+            }
         }
 
         /* 音乐播放器容器 */
@@ -424,7 +484,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* 新增：音乐律动条 */
@@ -451,21 +513,43 @@
         }
 
         /* 律动动画 */
-        .music-visualizer.active .bar:nth-child(1) { animation: sound 0.8s infinite ease-in-out alternate; }
-        .music-visualizer.active .bar:nth-child(2) { animation: sound 0.9s infinite ease-in-out alternate -0.4s; }
-        .music-visualizer.active .bar:nth-child(3) { animation: sound 1.1s infinite ease-in-out alternate -0.2s; }
-        .music-visualizer.active .bar:nth-child(4) { animation: sound 0.7s infinite ease-in-out alternate -0.6s; }
+        .music-visualizer.active .bar:nth-child(1) {
+            animation: sound 0.8s infinite ease-in-out alternate;
+        }
+
+        .music-visualizer.active .bar:nth-child(2) {
+            animation: sound 0.9s infinite ease-in-out alternate -0.4s;
+        }
+
+        .music-visualizer.active .bar:nth-child(3) {
+            animation: sound 1.1s infinite ease-in-out alternate -0.2s;
+        }
+
+        .music-visualizer.active .bar:nth-child(4) {
+            animation: sound 0.7s infinite ease-in-out alternate -0.6s;
+        }
 
         @keyframes sound {
-            0% { height: 4px; }
-            100% { height: 24px; }
+            0% {
+                height: 4px;
+            }
+            100% {
+                height: 24px;
+            }
         }
 
         /* 响应式设计 */
         @media (max-width: 600px) {
-            .container { padding: 35px 25px; width: 90%; }
-            h1 { font-size: 2em; }
+            .container {
+                padding: 35px 25px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
         }
+
         /* --- 新增：备案信息样式 --- */
         .beian-container {
             margin-top: 8px;
@@ -473,7 +557,7 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap; /* 小屏幕自动换行 */
-            gap: 15px;       /* 两个备案号之间的间距 */
+            gap: 15px; /* 两个备案号之间的间距 */
         }
 
         .beian-link {
@@ -523,7 +607,7 @@
 <div class="container">
     <header>
         <div class="avatar-wrapper">
-            <img src="avatar.png" alt="Avatar" class="avatar" id="avatar-img">
+            <img alt="Avatar" class="avatar" id="avatar-img" src="avatar.png">
             <div class="status-badge"></div>
         </div>
 
@@ -533,23 +617,23 @@
     </header>
 
     <section class="link-section">
-        <a href="https://github.com/lie-jiu" class="link-item" target="_blank"><span>💻 GitHub</span></a>
-        <a href="https://oj.liejiu.top" class="link-item" target="_blank"><span>🎈 在线评测</span></a>
-        <a href="https://blog.liejiu.top" class="link-item" target="_blank"><span>📝 个人博客</span></a>
-        <a href="mailto:liejiunb666@gmail.com" class="link-item" target="_blank"><span>📧 发送邮件</span></a>
+        <a class="link-item" href="https://github.com/lie-jiu" target="_blank"><span>💻 GitHub</span></a>
+        <a class="link-item" href="https://oj.liejiu.top" target="_blank"><span>🎈 在线评测</span></a>
+        <a class="link-item" href="https://blog.liejiu.top" target="_blank"><span>📝 个人博客</span></a>
+        <a class="link-item" href="mailto:liejiunb666@gmail.com" target="_blank"><span>📧 发送邮件</span></a>
     </section>
 
     <footer class="footer">
         <div>© 2025 Made with ❤️ by LieJiu</div>
 
         <div class="beian-container">
-            <a href="https://beian.miit.gov.cn/" target="_blank" class="beian-link">
-                赣ICP备2025076709号-1
-            </a>
-
-            <a href="https://beian.mps.gov.cn/#/query/webSearch?code=36110402000194" rel="noreferrer" target="_blank" class="beian-link">
-                <img src="https://beian.mps.gov.cn/favicon.ico" alt="公安备案图标" class="beian-icon">
+            <a class="beian-link" href="https://beian.mps.gov.cn/#/query/webSearch?code=36110402000194" rel="noreferrer"
+               target="_blank">
+                <img alt="公安备案图标" class="beian-icon" src="https://beian.mps.gov.cn/favicon.ico">
                 赣公网安备36110402000194号
+            </a>
+            <a class="beian-link" href="https://beian.miit.gov.cn/" target="_blank">
+                赣ICP备2025076709号-1
             </a>
         </div>
     </footer>
@@ -785,7 +869,7 @@
             // 碰撞/斥力检测 (鼠标)
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
-            let distance = Math.sqrt(dx*dx + dy*dy);
+            let distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < mouse.radius + this.size) {
                 // 如果鼠标太近，往相反方向推
@@ -835,7 +919,7 @@
                     + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
 
                 // 如果距离小于某个值，则连线
-                if (distance < (canvas.width/7) * (canvas.height/7)) {
+                if (distance < (canvas.width / 7) * (canvas.height / 7)) {
                     opacityValue = 1 - (distance / 20000);
 
                     const isDark = document.body.classList.contains('dark-mode');
@@ -893,7 +977,7 @@
             btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
 
             // 5. 文字视差
-            if(span) {
+            if (span) {
                 span.style.transition = 'transform 0.1s ease-out';
                 span.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
             }
@@ -907,7 +991,7 @@
             btn.style.transform = '';
             // 注意：这里不要清除 opacity，否则它又会变回 CSS 默认的 0
 
-            if(span) {
+            if (span) {
                 span.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
                 span.style.transform = '';
             }
