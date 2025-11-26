@@ -61,7 +61,7 @@
             background-size: 400% 400%;
             animation: liquidGradientBG 30s ease infinite;
             color: var(--text-main);
-            overflow: hidden;
+            overflow: hidden; /* 默认电脑端隐藏滚动条，保持应用感 */
             transition: color 0.8s ease;
             perspective: 1000px; /* 启用3D视差 */
         }
@@ -355,7 +355,6 @@
             position: fixed;
             width: 12px;
             height: 12px;
-            /* 移除错误的 CSS 变量引用，将在 JS 中动态设置颜色 */
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
@@ -538,18 +537,6 @@
             }
         }
 
-        /* 响应式设计 */
-        @media (max-width: 600px) {
-            .container {
-                padding: 35px 25px;
-                width: 90%;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-        }
-
         /* --- 新增：备案信息样式 --- */
         .beian-container {
             margin-top: 8px;
@@ -578,6 +565,34 @@
             height: 16px;
             margin-right: 5px;
             vertical-align: middle;
+        }
+
+        /* 响应式设计 - 针对移动设备优化 */
+        @media (max-width: 768px) {
+            body {
+                /* 关键修复：允许手机端上下滚动，防止内容被截断 */
+                overflow-y: auto;
+                /* 使用 block 布局代替 flex 居中，防止内容溢出屏幕上方不可见 */
+                display: block;
+                height: auto;
+                padding: 40px 0; /* 给上下留出空间 */
+            }
+
+            .container {
+                padding: 35px 25px;
+                width: 90%;
+                /* 确保容器在 block 布局下居中 */
+                margin: 0 auto;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            /* 移动端隐藏鼠标拖尾，优化性能和体验 */
+            .mouse-trail {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -743,28 +758,31 @@
         createParticle();
     }
 
-    // 3D 视差效果
+    // 3D 视差效果 (修改点：增加了设备宽度判断)
     const container = document.querySelector('.container');
     setTimeout(() => {
         container.style.opacity = '1';
         container.style.transform = 'translateY(0) scale(1)';
         container.style.animation = 'none';
 
-        document.addEventListener('mousemove', (e) => {
-            const sensitivity = 25;
-            const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
-            container.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg) scale(1)`;
-        });
+        // 关键修改：只有屏幕宽度大于 768px (电脑/平板横屏) 时才启用 3D 视差
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                const sensitivity = 25;
+                const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
+                container.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg) scale(1)`;
+            });
 
-        document.addEventListener('mouseleave', () => {
-            container.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
-            container.style.transition = 'transform 0.5s ease';
-        });
+            document.addEventListener('mouseleave', () => {
+                container.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+                container.style.transition = 'transform 0.5s ease';
+            });
 
-        document.addEventListener('mouseenter', () => {
-            container.style.transition = 'transform 0.1s ease-out';
-        });
+            document.addEventListener('mouseenter', () => {
+                container.style.transition = 'transform 0.1s ease-out';
+            });
+        }
     }, 1500);
 
     // 点击屏幕生成波纹
@@ -958,6 +976,9 @@
         const span = btn.querySelector('span');
 
         btn.addEventListener('mousemove', (e) => {
+            // 0. 手机端禁用吸附效果 (新增)
+            if (window.innerWidth <= 768) return;
+
             // 1. 获取位置
             const rect = btn.getBoundingClientRect();
             const x = e.clientX - rect.left - rect.width / 2;
@@ -967,19 +988,19 @@
             btn.style.animation = 'none';
             btn.style.opacity = '1'; // 👈 加上这一行，按钮就不会消失了！
 
-            // 3. 磁力计算
-            const strength = 0.4;
+            // 3. 磁力计算 (已减弱幅度)
+            const strength = 0.15; // 从 0.4 降低到 0.15
             const moveX = x * strength;
             const moveY = y * strength - 6; // -6 是为了保留悬停时的上浮感
 
             // 4. 快速响应移动
             btn.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s';
-            btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+            btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`; // scale 从 1.05 微调至 1.02
 
             // 5. 文字视差
             if (span) {
                 span.style.transition = 'transform 0.1s ease-out';
-                span.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+                span.style.transform = `translate(${x * 0.08}px, ${y * 0.08}px)`; // 文字视差也相应减弱
             }
         });
 
