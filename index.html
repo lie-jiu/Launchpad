@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="烈酒云" name="description">
-    <title>烈酒云</title>
+    <title>烈酒云 - 单手全能版</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap"
           rel="stylesheet">
     <style>
@@ -21,10 +21,9 @@
             --card-shadow: 0 15px 50px rgba(31, 38, 135, 0.12);
             --btn-bg: linear-gradient(135deg, #7c99e4 0%, #a7c1ed 100%);
             --btn-hover-shadow: 0 10px 30px rgba(124, 153, 228, 0.35);
-            --line-color: rgba(45, 52, 54, 0.08); /* 新增：线条颜色 */
-            --visualizer-color: #2d3436; /* 新增：律动条颜色 */
-            /* 新增：定义 RGB 分量用于 JS 中的鼠标拖尾效果 */
-            --text-main-rgb-comp: 45, 52, 54; /* #2d3436 的 RGB 值 */
+            --line-color: rgba(45, 52, 54, 0.08);
+            --visualizer-color: #2d3436;
+            --text-main-rgb-comp: 45, 52, 54;
         }
 
         /* 暗黑模式变量 */
@@ -39,10 +38,9 @@
             --card-shadow: 0 15px 50px rgba(0, 0, 0, 0.45);
             --btn-bg: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
             --btn-hover-shadow: 0 10px 30px rgba(75, 108, 183, 0.35);
-            --line-color: rgba(224, 231, 235, 0.08); /* 新增：暗色模式线条颜色 */
+            --line-color: rgba(224, 231, 235, 0.08);
             --visualizer-color: #e0e7eb;
-            /* 新增：定义 RGB 分量用于 JS 中的鼠标拖尾效果 */
-            --text-main-rgb-comp: 224, 231, 235; /* #e0e7eb 的 RGB 值 */
+            --text-main-rgb-comp: 224, 231, 235;
         }
 
         /* 基础样式 */
@@ -61,9 +59,9 @@
             background-size: 400% 400%;
             animation: liquidGradientBG 30s ease infinite;
             color: var(--text-main);
-            overflow: hidden; /* 默认电脑端隐藏滚动条，保持应用感 */
+            overflow: hidden;
             transition: color 0.8s ease;
-            perspective: 1000px; /* 启用3D视差 */
+            perspective: 1000px;
         }
 
         @keyframes liquidGradientBG {
@@ -75,18 +73,16 @@
             }
         }
 
-        /* 新增：交互式线条画布 */
         #interactive-lines {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* 在液态粒子之上，内容之下 */
-            pointer-events: none; /* 让点击事件穿透 */
+            z-index: 1;
+            pointer-events: none;
         }
 
-        /* 液态粒子背景 */
         .liquid-particles {
             position: absolute;
             width: 100%;
@@ -118,7 +114,6 @@
             }
         }
 
-        /* 液态毛玻璃卡片 */
         .container {
             position: relative;
             z-index: 10;
@@ -136,7 +131,8 @@
             transform: translateY(30px) scale(0.9);
             animation: liquidPopIn 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out, box-shadow 0.8s, background 0.8s;
+            transition: box-shadow 0.8s, background 0.8s;
+            user-select: none;
         }
 
         @keyframes liquidPopIn {
@@ -146,7 +142,6 @@
             }
         }
 
-        /* 头像区域 */
         .avatar-wrapper {
             position: relative;
             display: inline-block;
@@ -168,7 +163,6 @@
             border-color: rgba(255, 255, 255, 0.8);
         }
 
-        /* 状态徽章 */
         .status-badge {
             position: absolute;
             bottom: 8px;
@@ -193,7 +187,6 @@
             }
         }
 
-        /* 标题故障风效果 */
         h1 {
             font-size: 2.2em;
             margin: 10px 0;
@@ -230,45 +223,21 @@
         }
 
         @keyframes glitch-anim {
-            0% {
-                clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
-            }
-            20% {
-                clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%);
-            }
-            40% {
-                clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%);
-            }
-            60% {
-                clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
-            }
-            80% {
-                clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%);
-            }
-            100% {
-                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
-            }
+            0% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
+            20% { clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%); }
+            40% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); }
+            60% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
+            80% { clip-path: polygon(0 90%, 100% 90%, 100% 100%, 0 100%); }
+            100% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
         }
 
         @keyframes glitch-anim2 {
-            0% {
-                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
-            }
-            20% {
-                clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%);
-            }
-            40% {
-                clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%);
-            }
-            60% {
-                clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%);
-            }
-            80% {
-                clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%);
-            }
-            100% {
-                clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);
-            }
+            0% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); }
+            20% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); }
+            40% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); }
+            60% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); }
+            80% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); }
+            100% { clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0); }
         }
 
         .bio {
@@ -280,7 +249,6 @@
             line-height: 1.6;
         }
 
-        /* 链接按钮区域 */
         .link-section {
             display: flex;
             flex-direction: column;
@@ -336,7 +304,6 @@
             left: 100%;
         }
 
-        /* 页脚 */
         .footer {
             margin-top: 45px;
             font-size: 0.9em;
@@ -350,7 +317,6 @@
             opacity: 1;
         }
 
-        /* 鼠标拖尾 */
         .mouse-trail {
             position: fixed;
             width: 12px;
@@ -374,11 +340,17 @@
             }
         }
 
-        /* 主题切换按钮 */
-        .theme-switch {
+        /* 按钮群组样式 */
+        .controls-group {
             position: absolute;
             top: 30px;
             right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .control-btn {
             width: 48px;
             height: 48px;
             background: var(--liquid-glass-bg);
@@ -390,17 +362,112 @@
             cursor: pointer;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            z-index: 100;
             font-size: 1.3em;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
         }
 
-        .theme-switch:hover {
+        .control-btn:hover {
             transform: scale(1.15);
             background: rgba(255, 255, 255, 0.6);
         }
 
-        /* 飘落 Emoji */
+        /* 摄像头开启时的指示灯 */
+        .camera-active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+
+        /* 摄像头预览窗口（默认隐藏） */
+        #webcam-preview {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 160px;
+            height: 120px;
+            border-radius: 15px;
+            overflow: hidden;
+            z-index: 90;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+            pointer-events: none;
+            background: #000;
+        }
+
+        #webcam-preview.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #webcam-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* 镜像翻转 */
+        }
+
+        /* 手势状态提示 */
+        #gesture-status {
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 0;
+        }
+
+        /* 新增：手势光标 */
+        #gesture-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none; /* 让物理鼠标点击穿透，但JS会模拟点击 */
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            transition: width 0.15s, height 0.15s, background-color 0.15s, transform 0.1s;
+            display: none;
+        }
+
+        #gesture-cursor.active {
+            display: block;
+        }
+
+        #gesture-cursor.pinching {
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 14px;
+            height: 14px;
+            border-color: #7c99e4;
+        }
+
+        #gesture-cursor.clicking {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
         .falling-emoji {
             position: fixed;
             top: -60px;
@@ -418,7 +485,6 @@
             }
         }
 
-        /* 屏幕波纹 */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -436,7 +502,6 @@
             }
         }
 
-        /* 音乐播放器容器 */
         .music-control-group {
             position: fixed;
             bottom: 30px;
@@ -447,7 +512,6 @@
             z-index: 100;
         }
 
-        /* 音乐播放器 */
         .music-player {
             width: 50px;
             height: 50px;
@@ -488,7 +552,6 @@
             }
         }
 
-        /* 新增：音乐律动条 */
         .music-visualizer {
             display: flex;
             gap: 4px;
@@ -511,7 +574,6 @@
             transition: background-color 0.8s;
         }
 
-        /* 律动动画 */
         .music-visualizer.active .bar:nth-child(1) {
             animation: sound 0.8s infinite ease-in-out alternate;
         }
@@ -529,34 +591,29 @@
         }
 
         @keyframes sound {
-            0% {
-                height: 4px;
-            }
-            100% {
-                height: 24px;
-            }
+            0% { height: 4px; }
+            100% { height: 24px; }
         }
 
-        /* --- 新增：备案信息样式 --- */
         .beian-container {
             margin-top: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap; /* 小屏幕自动换行 */
-            gap: 15px; /* 两个备案号之间的间距 */
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .beian-link {
             display: inline-flex;
             align-items: center;
             text-decoration: none;
-            color: inherit; /* 继承页脚原本的颜色 */
+            color: inherit;
             transition: color 0.3s, transform 0.3s;
         }
 
         .beian-link:hover {
-            color: var(--text-main); /* 悬停时变深色 */
+            color: var(--text-main);
             transform: translateY(-2px);
         }
 
@@ -567,21 +624,17 @@
             vertical-align: middle;
         }
 
-        /* 响应式设计 - 针对移动设备优化 */
         @media (max-width: 768px) {
             body {
-                /* 关键修复：允许手机端上下滚动，防止内容被截断 */
                 overflow-y: auto;
-                /* 使用 block 布局代替 flex 居中，防止内容溢出屏幕上方不可见 */
                 display: block;
                 height: auto;
-                padding: 40px 0; /* 给上下留出空间 */
+                padding: 40px 0;
             }
 
             .container {
                 padding: 35px 25px;
                 width: 90%;
-                /* 确保容器在 block 布局下居中 */
                 margin: 0 auto;
             }
 
@@ -589,8 +642,11 @@
                 font-size: 2em;
             }
 
-            /* 移动端隐藏鼠标拖尾，优化性能和体验 */
             .mouse-trail {
+                display: none;
+            }
+
+            #webcam-preview {
                 display: none;
             }
         }
@@ -600,9 +656,16 @@
 
 <canvas id="interactive-lines"></canvas>
 
+<!-- 手势光标 -->
+<div id="gesture-cursor"></div>
+
 <div class="liquid-particles" id="liquid-particles-container"></div>
 
-<div class="theme-switch" id="theme-toggle" title="切换主题">☀️</div>
+<div class="controls-group">
+    <!-- 摄像头控制开关 -->
+    <div class="control-btn" id="camera-toggle" title="开启手势控制">📷</div>
+    <div class="control-btn" id="theme-toggle" title="切换主题">☀️</div>
+</div>
 
 <div class="music-control-group">
     <div class="music-player" onclick="toggleMusic()" title="点击播放/暂停">
@@ -617,6 +680,12 @@
         <div class="bar"></div>
         <div class="bar"></div>
     </div>
+</div>
+
+<!-- 摄像头预览区域 -->
+<div id="webcam-preview">
+    <video id="webcam-video" playsinline></video>
+    <div id="gesture-status">等待开启...</div>
 </div>
 
 <div class="container">
@@ -653,6 +722,12 @@
         </div>
     </footer>
 </div>
+
+<!-- 引入 MediaPipe 库 -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
 <script>
     // 配置参数
@@ -694,7 +769,7 @@
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // 鼠标拖尾 (已修复)
+    // 鼠标拖尾
     let isDrawing = false;
     document.addEventListener('mousemove', (e) => {
         if (isDrawing) return;
@@ -706,18 +781,8 @@
         trail.style.left = `${e.clientX}px`;
         trail.style.top = `${e.clientY}px`;
 
-        // **修复点：使用 getComputedStyle 获取预定义的 RGB 分量变量**
         const rgbComponents = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
-
-        // 随机色相的 HSL (保留了原代码中的随机色相逻辑)
-        const hue = Math.random() * 360;
-        const isDark = body.classList.contains('dark-mode');
-        // 使用 HSL 创建一个带随机色相的半透明颜色
-        // trail.style.background = `hsla(${hue}, 60%, ${isDark ? '60%' : '80%'}, 0.6)`;
-
-        // 或者使用主题颜色作为基色，并应用透明度
         trail.style.background = `rgba(${rgbComponents}, 0.7)`;
-
 
         document.body.appendChild(trail);
         setTimeout(() => trail.remove(), 800);
@@ -758,36 +823,65 @@
         createParticle();
     }
 
-    // 3D 视差效果 (修改点：增加了设备宽度判断)
+    // 3D 视差与交互逻辑
     const container = document.querySelector('.container');
+
+    // 初始化状态变量
+    let currentRotateX = 0;
+    let currentRotateY = 0;
+    let currentTranslateX = 0;
+    let currentTranslateY = 0;
+    let currentScale = 1;
+    let isGestureActive = false; // 是否开启手势
+
     setTimeout(() => {
         container.style.opacity = '1';
         container.style.transform = 'translateY(0) scale(1)';
         container.style.animation = 'none';
 
-        // 关键修改：只有屏幕宽度大于 768px (电脑/平板横屏) 时才启用 3D 视差
         if (window.innerWidth > 768) {
+            // 鼠标移动事件 (如果手势未开启，则使用鼠标)
             document.addEventListener('mousemove', (e) => {
+                if (isGestureActive) return; // 如果开启了摄像头，忽略鼠标视差
+
                 const sensitivity = 25;
                 const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
                 const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
-                container.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg) scale(1)`;
+
+                // 更新当前状态
+                currentRotateY = -xAxis;
+                currentRotateX = yAxis;
+
+                updateContainerTransform();
             });
 
             document.addEventListener('mouseleave', () => {
-                container.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
-                container.style.transition = 'transform 0.5s ease';
+                if (isGestureActive) return;
+                currentRotateY = 0;
+                currentRotateX = 0;
+                updateContainerTransform();
             });
 
             document.addEventListener('mouseenter', () => {
+                if (isGestureActive) return;
                 container.style.transition = 'transform 0.1s ease-out';
             });
         }
     }, 1500);
 
+    // 统一更新 Transform 函数
+    function updateContainerTransform() {
+        container.style.transform = `
+            translate(${currentTranslateX}px, ${currentTranslateY}px)
+            rotateY(${currentRotateY}deg)
+            rotateX(${currentRotateX}deg)
+            scale(${currentScale})
+        `;
+    }
+
     // 点击屏幕生成波纹
     document.addEventListener('click', function (e) {
-        if (e.target.closest('.music-player') || e.target.closest('a')) return;
+        if (e.target.closest('.music-player') || e.target.closest('a') || e.target.closest('.control-btn')) return;
 
         const ripple = document.createElement('div');
         ripple.classList.add('ripple');
@@ -806,33 +900,29 @@
     function toggleMusic() {
         const audio = document.getElementById('bg-music');
         const player = document.querySelector('.music-player');
-        const visualizer = document.getElementById('visualizer'); // 获取律动条
+        const visualizer = document.getElementById('visualizer');
 
         if (audio.paused) {
             audio.play().catch(error => console.log("音乐播放被浏览器阻止"));
             player.classList.add('playing');
-            visualizer.classList.add('active'); // 激活律动
+            visualizer.classList.add('active');
         } else {
             audio.pause();
             player.classList.remove('playing');
-            visualizer.classList.remove('active'); // 停止律动
+            visualizer.classList.remove('active');
         }
     }
 
-    /**
-     * 新增：交互式线条背景脚本
-     * 实现粒子连线和鼠标斥力效果
-     */
+    // 交互式线条背景脚本
     const canvas = document.getElementById('interactive-lines');
     const ctx = canvas.getContext('2d');
     let particlesArray;
     let mouse = {
         x: null,
         y: null,
-        radius: 150 // 鼠标斥力半径
+        radius: 150
     }
 
-    // 调整画布大小
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -842,7 +932,6 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // 监听鼠标移动
     window.addEventListener('mousemove', (event) => {
         mouse.x = event.x;
         mouse.y = event.y;
@@ -853,7 +942,6 @@
         mouse.y = undefined;
     });
 
-    // 粒子类
     class Particle {
         constructor(x, y, directionX, directionY, size, color) {
             this.x = x;
@@ -862,21 +950,17 @@
             this.directionY = directionY;
             this.size = size;
             this.color = color;
-            // 记录初始位置用于回弹（可选，这里采用自由浮动+斥力）
         }
 
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-
-            // 根据主题获取颜色
             const isDark = document.body.classList.contains('dark-mode');
             ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(45, 52, 54, 0.15)';
             ctx.fill();
         }
 
         update() {
-            // 边界检测
             if (this.x > canvas.width || this.x < 0) {
                 this.directionX = -this.directionX;
             }
@@ -884,13 +968,11 @@
                 this.directionY = -this.directionY;
             }
 
-            // 碰撞/斥力检测 (鼠标)
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < mouse.radius + this.size) {
-                // 如果鼠标太近，往相反方向推
                 if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
                     this.x += 5;
                 }
@@ -905,30 +987,26 @@
                 }
             }
 
-            // 正常移动
             this.x += this.directionX;
             this.y += this.directionY;
             this.draw();
         }
     }
 
-    // 初始化粒子
     function initParticles() {
         particlesArray = [];
-        // 粒子数量：屏幕像素 / 9000
         let numberOfParticles = (canvas.height * canvas.width) / 9000;
         for (let i = 0; i < numberOfParticles; i++) {
             let size = (Math.random() * 3) + 1;
             let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
             let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-            let directionX = (Math.random() * 1) - 0.5; // 速度
+            let directionX = (Math.random() * 1) - 0.5;
             let directionY = (Math.random() * 1) - 0.5;
 
             particlesArray.push(new Particle(x, y, directionX, directionY, size));
         }
     }
 
-    // 连线函数
     function connect() {
         let opacityValue = 1;
         for (let a = 0; a < particlesArray.length; a++) {
@@ -936,16 +1014,12 @@
                 let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
                     + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
 
-                // 如果距离小于某个值，则连线
                 if (distance < (canvas.width / 7) * (canvas.height / 7)) {
                     opacityValue = 1 - (distance / 20000);
-
                     const isDark = document.body.classList.contains('dark-mode');
-                    // 动态改变线条颜色
                     ctx.strokeStyle = isDark
                         ? `rgba(224, 231, 235, ${opacityValue * 0.15})`
                         : `rgba(45, 52, 54, ${opacityValue * 0.15})`;
-
                     ctx.lineWidth = 1;
                     ctx.beginPath();
                     ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -956,7 +1030,6 @@
         }
     }
 
-    // 动画循环
     function animateParticles() {
         requestAnimationFrame(animateParticles);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -971,53 +1044,299 @@
 
     // 按钮吸附效果
     const buttons = document.querySelectorAll('.link-item');
-
     buttons.forEach(btn => {
         const span = btn.querySelector('span');
-
         btn.addEventListener('mousemove', (e) => {
-            // 0. 手机端禁用吸附效果 (新增)
             if (window.innerWidth <= 768) return;
-
-            // 1. 获取位置
             const rect = btn.getBoundingClientRect();
             const x = e.clientX - rect.left - rect.width / 2;
             const y = e.clientY - rect.top - rect.height / 2;
-
-            // 2. 【关键修复】停止动画的同时，强制保持不透明
             btn.style.animation = 'none';
-            btn.style.opacity = '1'; // 👈 加上这一行，按钮就不会消失了！
-
-            // 3. 磁力计算 (已减弱幅度)
-            const strength = 0.15; // 从 0.4 降低到 0.15
+            btn.style.opacity = '1';
+            const strength = 0.15;
             const moveX = x * strength;
-            const moveY = y * strength - 6; // -6 是为了保留悬停时的上浮感
-
-            // 4. 快速响应移动
+            const moveY = y * strength - 6;
             btn.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s';
-            btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`; // scale 从 1.05 微调至 1.02
-
-            // 5. 文字视差
+            btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`;
             if (span) {
                 span.style.transition = 'transform 0.1s ease-out';
-                span.style.transform = `translate(${x * 0.08}px, ${y * 0.08}px)`; // 文字视差也相应减弱
+                span.style.transform = `translate(${x * 0.08}px, ${y * 0.08}px)`;
             }
         });
 
         btn.addEventListener('mouseleave', (e) => {
-            // 1. 恢复原本的慢速弹性过渡
             btn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s';
-
-            // 2. 清除 JS 样式，让 CSS 接管
             btn.style.transform = '';
-            // 注意：这里不要清除 opacity，否则它又会变回 CSS 默认的 0
-
             if (span) {
                 span.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
                 span.style.transform = '';
             }
         });
     });
+
+    // -----------------------------------------------------------
+    // 单手手势控制逻辑 (MediaPipe Hands)
+    // -----------------------------------------------------------
+
+    const videoElement = document.getElementById('webcam-video');
+    const cameraToggleBtn = document.getElementById('camera-toggle');
+    const webcamPreview = document.getElementById('webcam-preview');
+    const gestureStatus = document.getElementById('gesture-status');
+    const gestureCursor = document.getElementById('gesture-cursor');
+    let camera = null;
+    let hands = null;
+
+    // 状态变量
+    let isPinching = false;
+    let pinchStartX = 0;
+    let pinchStartY = 0;
+    let cardStartX = 0;
+    let cardStartY = 0;
+
+    // 缩放基准
+    let refHandSize = 0; // 捏合开始时手的大小
+    let refCardScale = 1; // 捏合开始时卡片的大小
+
+    // 点击检测
+    let lastPinchReleaseTime = 0;
+    let pinchStartTime = 0;
+
+    cameraToggleBtn.addEventListener('click', () => {
+        if (!isGestureActive) {
+            startCamera();
+        } else {
+            stopCamera();
+        }
+    });
+
+    async function startCamera() {
+        if (!hands) {
+            gestureStatus.innerText = "加载模型中...";
+            hands = new Hands({locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                }});
+
+            hands.setOptions({
+                maxNumHands: 1, // 强制单手
+                modelComplexity: 1,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+
+            hands.onResults(onResults);
+        }
+
+        if (!camera) {
+            camera = new Camera(videoElement, {
+                onFrame: async () => {
+                    await hands.send({image: videoElement});
+                },
+                width: 320,
+                height: 240
+            });
+        }
+
+        try {
+            await camera.start();
+            isGestureActive = true;
+            cameraToggleBtn.classList.add('camera-active');
+            webcamPreview.classList.add('show');
+            gestureCursor.classList.add('active');
+            gestureStatus.innerText = "摄像头已启动";
+
+            // 切换为快速响应模式
+            container.style.transition = 'transform 0.05s linear, box-shadow 0.8s, background 0.8s';
+
+        } catch (error) {
+            console.error("Camera start failed:", error);
+            alert("无法访问摄像头，请检查权限。");
+            gestureStatus.innerText = "启动失败";
+        }
+    }
+
+    function stopCamera() {
+        if (camera) {
+            camera.stop();
+            camera = null;
+        }
+        isGestureActive = false;
+        cameraToggleBtn.classList.remove('camera-active');
+        webcamPreview.classList.remove('show');
+        gestureCursor.classList.remove('active');
+
+        // 恢复原有状态
+        currentTranslateX = 0;
+        currentTranslateY = 0;
+        currentRotateX = 0;
+        currentRotateY = 0;
+        currentScale = 1;
+
+        container.style.transition = 'transform 0.5s ease-out, box-shadow 0.8s, background 0.8s';
+        updateContainerTransform();
+    }
+
+    // 映射函数：增加灵敏度，使得手不需要移动到边缘也能触发边缘点击
+    function mapCursor(value) {
+        // 映射参数：保留边缘 20% 的“死区”不要用户去够
+        const minRange = 0.2;
+        const maxRange = 0.8;
+
+        // 归一化到 0-1
+        let normalized = (value - minRange) / (maxRange - minRange);
+
+        // 限制在屏幕内
+        return Math.max(0, Math.min(1, normalized));
+    }
+
+    // 判断捏合
+    function isHandPinchingFunc(landmarks) {
+        const indexTip = landmarks[8];
+        const thumbTip = landmarks[4];
+        const distance = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+        return distance < 0.05;
+    }
+
+    // 计算手掌大小（作为距离参考）
+    function getHandSize(landmarks) {
+        // 使用手腕(0)到中指根部(9)的距离比较稳定
+        const wrist = landmarks[0];
+        const middleMCP = landmarks[9];
+        return Math.hypot(wrist.x - middleMCP.x, wrist.y - middleMCP.y);
+    }
+
+    function onResults(results) {
+        if (!isGestureActive) return;
+
+        gestureCursor.style.display = 'none';
+
+        if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+            const hand = results.multiHandLandmarks[0];
+            const indexTip = hand[8];
+            const palmCenter = hand[9];
+
+            // 1. 光标位置优化 (映射 + 灵敏度)
+            // 原始 x 是镜像的 (1-x)
+            const rawX = 1 - indexTip.x;
+            const rawY = indexTip.y;
+
+            const cursorX = mapCursor(rawX) * window.innerWidth;
+            const cursorY = mapCursor(rawY) * window.innerHeight;
+
+            gestureCursor.style.display = 'block';
+            gestureCursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`; // 使用 transform 性能更好
+            // 更新 DOM 位置用于点击检测
+            gestureCursor.dataset.x = cursorX;
+            gestureCursor.dataset.y = cursorY;
+
+            // 2. 检测捏合
+            const isCurrentlyPinching = isHandPinchingFunc(hand);
+            const currentHandSize = getHandSize(hand);
+
+            // 3. 悬停模式 (张开手)
+            if (!isCurrentlyPinching) {
+                // 如果刚刚松开，检测双击
+                if (isPinching) {
+                    const now = Date.now();
+                    const pinchDuration = now - pinchStartTime;
+
+                    if (pinchDuration < 400) { // 是一次短促的捏合
+                        if (now - lastPinchReleaseTime < 500) {
+                            // --- 双击触发逻辑 ---
+                            gestureStatus.innerText = "✨ 双捏点击触发！";
+                            gestureCursor.classList.add('clicking');
+                            setTimeout(() => gestureCursor.classList.remove('clicking'), 300);
+
+                            // 隐藏光标以获取下方的元素
+                            gestureCursor.style.display = 'none';
+                            const x = parseFloat(gestureCursor.dataset.x);
+                            const y = parseFloat(gestureCursor.dataset.y);
+
+                            let element = document.elementFromPoint(x, y);
+
+                            // 关键修复：如果点到的是 icon 或 span，向上查找父级链接
+                            if (element) {
+                                const link = element.closest('a') || element.closest('button') || element.closest('.control-btn');
+                                if (link) {
+                                    link.click();
+                                    // 视觉波纹
+                                    const ripple = document.createElement('div');
+                                    ripple.className = 'ripple';
+                                    document.body.appendChild(ripple);
+                                    ripple.style.left = (x - 60) + 'px';
+                                    ripple.style.top = (y - 60) + 'px';
+                                    setTimeout(() => ripple.remove(), 800);
+                                } else {
+                                    // 普通元素点击
+                                    element.click();
+                                }
+                            }
+                            lastPinchReleaseTime = 0;
+                        } else {
+                            lastPinchReleaseTime = now;
+                        }
+                    }
+                }
+
+                isPinching = false;
+                gestureCursor.classList.remove('pinching');
+                container.style.cursor = 'default';
+
+                // 视差逻辑
+                const x = (0.5 - palmCenter.x) * 2;
+                const y = (0.5 - palmCenter.y) * 2;
+                currentRotateY = x * 15;
+                currentRotateX = y * 15;
+
+                gestureStatus.innerText = "🖐️ 张开: 悬停 / 双捏点击";
+
+            } else {
+                // 4. 捏合模式 (拖拽 + 缩放)
+                gestureCursor.classList.add('pinching');
+
+                if (!isPinching) {
+                    // 刚开始捏合：记录初始状态
+                    isPinching = true;
+                    pinchStartTime = Date.now();
+
+                    pinchStartX = cursorX;
+                    pinchStartY = cursorY;
+                    cardStartX = currentTranslateX;
+                    cardStartY = currentTranslateY;
+
+                    refHandSize = currentHandSize;
+                    refCardScale = currentScale;
+                }
+
+                // 拖拽计算
+                const deltaX = cursorX - pinchStartX;
+                const deltaY = cursorY - pinchStartY;
+                currentTranslateX = cardStartX + deltaX;
+                currentTranslateY = cardStartY + deltaY;
+
+                // 缩放计算 (推拉逻辑)
+                // ratio > 1 表示手变大(靠近摄像头) -> 我们想要缩小
+                // ratio < 1 表示手变小(远离摄像头) -> 我们想要放大
+                if (refHandSize > 0) {
+                    const ratio = currentHandSize / refHandSize;
+                    // 使用反比来实现：靠近=变小
+                    let newScale = refCardScale / ratio;
+
+                    // 限制缩放范围
+                    newScale = Math.max(0.4, Math.min(newScale, 1.8));
+                    currentScale = newScale;
+                }
+
+                gestureStatus.innerText = "🤏 捏合: 移动 + 前推缩小/后拉放大";
+                container.style.cursor = 'grabbing';
+            }
+
+        } else {
+            gestureStatus.innerText = "未检测到手部";
+            isPinching = false;
+        }
+
+        updateContainerTransform();
+    }
 </script>
 </body>
 </html>
