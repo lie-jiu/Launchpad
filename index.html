@@ -5,6 +5,8 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="烈酒云" name="description">
     <title>烈酒云</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap"
           rel="stylesheet">
     <style>
@@ -132,6 +134,7 @@
             animation: liquidPopIn 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             transform-style: preserve-3d;
             transition: box-shadow 0.8s, background 0.8s;
+            will-change: transform;
             user-select: none;
         }
 
@@ -272,6 +275,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s;
+            will-change: transform;
             opacity: 0;
             transform: translateY(30px);
             animation: slideUpLiquid 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -435,37 +439,20 @@
             padding: 2px 0;
         }
 
-        /* 新增：手势光标 */
-        #gesture-cursor {
+        /* 手势骨骼Canvas */
+        #gesture-canvas {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            pointer-events: none; /* 让物理鼠标点击穿透，但JS会模拟点击 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 10000;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-            transition: width 0.15s, height 0.15s, background-color 0.15s, transform 0.1s;
+            pointer-events: none;
             display: none;
         }
 
-        #gesture-cursor.active {
+        #gesture-canvas.active {
             display: block;
-        }
-
-        #gesture-cursor.pinching {
-            background-color: rgba(255, 255, 255, 0.8);
-            width: 14px;
-            height: 14px;
-            border-color: #7c99e4;
-        }
-
-        #gesture-cursor.clicking {
-            transform: translate(-50%, -50%) scale(1.5);
-            background-color: #2ecc71;
-            border-color: #2ecc71;
         }
 
         .falling-emoji {
@@ -650,19 +637,22 @@
                 display: none;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            .music-visualizer { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
 <canvas id="interactive-lines"></canvas>
 
-<!-- 手势光标 -->
-<div id="gesture-cursor"></div>
+<canvas id="gesture-canvas"></canvas>
 
 <div class="liquid-particles" id="liquid-particles-container"></div>
 
 <div class="controls-group">
-    <!-- 摄像头控制开关 -->
     <div class="control-btn" id="camera-toggle" title="开启手势控制">📷</div>
     <div class="control-btn" id="theme-toggle" title="切换主题">☀️</div>
 </div>
@@ -682,7 +672,6 @@
     </div>
 </div>
 
-<!-- 摄像头预览区域 -->
 <div id="webcam-preview">
     <video id="webcam-video" playsinline></video>
     <div id="gesture-status">等待开启...</div>
@@ -701,10 +690,10 @@
     </header>
 
     <section class="link-section">
-        <a class="link-item" href="https://github.com/lie-jiu" target="_blank"><span>💻 GitHub</span></a>
-        <a class="link-item" href="https://oj.liejiu.top" target="_blank"><span>🎈 在线评测</span></a>
-        <a class="link-item" href="https://blog.liejiu.top" target="_blank"><span>📝 个人博客</span></a>
-        <a class="link-item" href="mailto:liejiunb666@gmail.com" target="_blank"><span>📧 发送邮件</span></a>
+        <a class="link-item" href="https://github.com/lie-jiu" target="_blank" rel="noopener noreferrer"><span>💻 GitHub</span></a>
+        <a class="link-item" href="https://oj.liejiu.top" target="_blank" rel="noopener noreferrer"><span>🎈 在线评测</span></a>
+        <a class="link-item" href="https://blog.liejiu.top" target="_blank" rel="noopener noreferrer"><span>📝 个人博客</span></a>
+        <a class="link-item" href="mailto:liejiunb666@gmail.com" target="_blank" rel="noopener noreferrer"><span>📧 发送邮件</span></a>
     </section>
 
     <footer class="footer">
@@ -723,7 +712,6 @@
     </footer>
 </div>
 
-<!-- 引入 MediaPipe 库 -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
@@ -742,6 +730,7 @@
     // 打字机效果
     const typingElement = document.getElementById('typing-text');
     let charIndex = 0;
+    let textMainRgbComp = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
 
     function typeWriter() {
         if (charIndex < config.typingText.length) {
@@ -767,25 +756,7 @@
         const isDark = body.classList.contains('dark-mode');
         toggleBtn.textContent = isDark ? '🌙' : '☀️';
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
-    // 鼠标拖尾
-    let isDrawing = false;
-    document.addEventListener('mousemove', (e) => {
-        if (isDrawing) return;
-        isDrawing = true;
-        setTimeout(() => isDrawing = false, 60);
-
-        const trail = document.createElement('div');
-        trail.className = 'mouse-trail';
-        trail.style.left = `${e.clientX}px`;
-        trail.style.top = `${e.clientY}px`;
-
-        const rgbComponents = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
-        trail.style.background = `rgba(${rgbComponents}, 0.7)`;
-
-        document.body.appendChild(trail);
-        setTimeout(() => trail.remove(), 800);
+        textMainRgbComp = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
     });
 
     // 随机飘落的Emoji
@@ -800,7 +771,14 @@
         setTimeout(() => emoji.remove(), 15000);
     }
 
-    setInterval(createEmoji, 500);
+    let emojiInterval = setInterval(createEmoji, 800);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            clearInterval(emojiInterval);
+        } else {
+            emojiInterval = setInterval(createEmoji, 800);
+        }
+    });
 
     // 背景粒子效果
     const particlesContainer = document.getElementById('liquid-particles-container');
@@ -995,7 +973,7 @@
 
     function initParticles() {
         particlesArray = [];
-        let numberOfParticles = (canvas.height * canvas.width) / 9000;
+        let numberOfParticles = Math.min(150, (canvas.height * canvas.width) / 9000);
         for (let i = 0; i < numberOfParticles; i++) {
             let size = (Math.random() * 3) + 1;
             let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
@@ -1082,7 +1060,9 @@
     const cameraToggleBtn = document.getElementById('camera-toggle');
     const webcamPreview = document.getElementById('webcam-preview');
     const gestureStatus = document.getElementById('gesture-status');
-    const gestureCursor = document.getElementById('gesture-cursor');
+    const gestureCanvas = document.getElementById('gesture-canvas');
+    const gestureCtx = gestureCanvas.getContext('2d');
+
     let camera = null;
     let hands = null;
 
@@ -1097,10 +1077,6 @@
     let refHandSize = 0; // 捏合开始时手的大小
     let refCardScale = 1; // 捏合开始时卡片的大小
 
-    // 点击检测
-    let lastPinchReleaseTime = 0;
-    let pinchStartTime = 0;
-
     cameraToggleBtn.addEventListener('click', () => {
         if (!isGestureActive) {
             startCamera();
@@ -1108,6 +1084,14 @@
             stopCamera();
         }
     });
+
+    // 处理窗口大小变化，重置canvas尺寸
+    function resizeCanvas() {
+        gestureCanvas.width = window.innerWidth;
+        gestureCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // 初始化调用一次
 
     async function startCamera() {
         if (!hands) {
@@ -1141,7 +1125,7 @@
             isGestureActive = true;
             cameraToggleBtn.classList.add('camera-active');
             webcamPreview.classList.add('show');
-            gestureCursor.classList.add('active');
+            gestureCanvas.classList.add('active'); // 显示骨骼画布
             gestureStatus.innerText = "摄像头已启动";
 
             // 切换为快速响应模式
@@ -1162,7 +1146,8 @@
         isGestureActive = false;
         cameraToggleBtn.classList.remove('camera-active');
         webcamPreview.classList.remove('show');
-        gestureCursor.classList.remove('active');
+        gestureCanvas.classList.remove('active');
+        gestureCtx.clearRect(0, 0, gestureCanvas.width, gestureCanvas.height);
 
         // 恢复原有状态
         currentTranslateX = 0;
@@ -1175,16 +1160,11 @@
         updateContainerTransform();
     }
 
-    // 映射函数：增加灵敏度，使得手不需要移动到边缘也能触发边缘点击
+    // 映射函数：增加灵敏度
     function mapCursor(value) {
-        // 映射参数：保留边缘 20% 的“死区”不要用户去够
         const minRange = 0.2;
         const maxRange = 0.8;
-
-        // 归一化到 0-1
         let normalized = (value - minRange) / (maxRange - minRange);
-
-        // 限制在屏幕内
         return Math.max(0, Math.min(1, normalized));
     }
 
@@ -1198,7 +1178,6 @@
 
     // 计算手掌大小（作为距离参考）
     function getHandSize(landmarks) {
-        // 使用手腕(0)到中指根部(9)的距离比较稳定
         const wrist = landmarks[0];
         const middleMCP = landmarks[9];
         return Math.hypot(wrist.x - middleMCP.x, wrist.y - middleMCP.y);
@@ -1207,130 +1186,106 @@
     function onResults(results) {
         if (!isGestureActive) return;
 
-        gestureCursor.style.display = 'none';
+        // 1. 清空画布
+        gestureCtx.save();
+        gestureCtx.clearRect(0, 0, gestureCanvas.width, gestureCanvas.height);
+
+        let skeletonScale = 1;
 
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             const hand = results.multiHandLandmarks[0];
+
+            // 逻辑处理：计算卡片缩放
             const indexTip = hand[8];
             const palmCenter = hand[9];
 
-            // 1. 光标位置优化 (映射 + 灵敏度)
-            // 原始 x 是镜像的 (1-x)
             const rawX = 1 - indexTip.x;
             const rawY = indexTip.y;
-
             const cursorX = mapCursor(rawX) * window.innerWidth;
             const cursorY = mapCursor(rawY) * window.innerHeight;
 
-            gestureCursor.style.display = 'block';
-            gestureCursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`; // 使用 transform 性能更好
-            // 更新 DOM 位置用于点击检测
-            gestureCursor.dataset.x = cursorX;
-            gestureCursor.dataset.y = cursorY;
-
-            // 2. 检测捏合
             const isCurrentlyPinching = isHandPinchingFunc(hand);
             const currentHandSize = getHandSize(hand);
 
-            // 3. 悬停模式 (张开手)
             if (!isCurrentlyPinching) {
-                // 如果刚刚松开，检测双击
-                if (isPinching) {
-                    const now = Date.now();
-                    const pinchDuration = now - pinchStartTime;
-
-                    if (pinchDuration < 400) { // 是一次短促的捏合
-                        if (now - lastPinchReleaseTime < 500) {
-                            // --- 双击触发逻辑 ---
-                            gestureStatus.innerText = "✨ 双捏点击触发！";
-                            gestureCursor.classList.add('clicking');
-                            setTimeout(() => gestureCursor.classList.remove('clicking'), 300);
-
-                            // 隐藏光标以获取下方的元素
-                            gestureCursor.style.display = 'none';
-                            const x = parseFloat(gestureCursor.dataset.x);
-                            const y = parseFloat(gestureCursor.dataset.y);
-
-                            let element = document.elementFromPoint(x, y);
-
-                            // 关键修复：如果点到的是 icon 或 span，向上查找父级链接
-                            if (element) {
-                                const link = element.closest('a') || element.closest('button') || element.closest('.control-btn');
-                                if (link) {
-                                    link.click();
-                                    // 视觉波纹
-                                    const ripple = document.createElement('div');
-                                    ripple.className = 'ripple';
-                                    document.body.appendChild(ripple);
-                                    ripple.style.left = (x - 60) + 'px';
-                                    ripple.style.top = (y - 60) + 'px';
-                                    setTimeout(() => ripple.remove(), 800);
-                                } else {
-                                    // 普通元素点击
-                                    element.click();
-                                }
-                            }
-                            lastPinchReleaseTime = 0;
-                        } else {
-                            lastPinchReleaseTime = now;
-                        }
-                    }
-                }
-
                 isPinching = false;
-                gestureCursor.classList.remove('pinching');
                 container.style.cursor = 'default';
 
-                // 视差逻辑
+                // 视差悬停
                 const x = (0.5 - palmCenter.x) * 2;
                 const y = (0.5 - palmCenter.y) * 2;
                 currentRotateY = x * 15;
                 currentRotateX = y * 15;
-
-                gestureStatus.innerText = "🖐️ 张开: 悬停 / 双捏点击";
+                gestureStatus.innerText = "🖐️ 张开: 悬停 / 移动视角";
 
             } else {
-                // 4. 捏合模式 (拖拽 + 缩放)
-                gestureCursor.classList.add('pinching');
-
+                // 捏合模式
                 if (!isPinching) {
-                    // 刚开始捏合：记录初始状态
                     isPinching = true;
-                    pinchStartTime = Date.now();
-
                     pinchStartX = cursorX;
                     pinchStartY = cursorY;
                     cardStartX = currentTranslateX;
                     cardStartY = currentTranslateY;
-
                     refHandSize = currentHandSize;
                     refCardScale = currentScale;
                 }
 
-                // 拖拽计算
+                // 拖拽
                 const deltaX = cursorX - pinchStartX;
                 const deltaY = cursorY - pinchStartY;
                 currentTranslateX = cardStartX + deltaX;
                 currentTranslateY = cardStartY + deltaY;
 
-                // 缩放计算 (推拉逻辑)
-                // ratio > 1 表示手变大(靠近摄像头) -> 我们想要缩小
-                // ratio < 1 表示手变小(远离摄像头) -> 我们想要放大
+                // 缩放卡片
                 if (refHandSize > 0) {
                     const ratio = currentHandSize / refHandSize;
-                    // 使用反比来实现：靠近=变小
                     let newScale = refCardScale / ratio;
-
-                    // 限制缩放范围
                     newScale = Math.max(0.4, Math.min(newScale, 1.8));
                     currentScale = newScale;
+
+                    // 计算骨骼缩放 (反向透视，与卡片同步)
+                    // 手越近(ratio>1)，骨骼应越小。手越远(ratio<1)，骨骼应越大。
+                    // 使用平方级反比来抵消并反转自然的透视效果
+                    skeletonScale = Math.pow(1 / ratio, 2.2);
                 }
 
                 gestureStatus.innerText = "🤏 捏合: 移动 + 前推缩小/后拉放大";
                 container.style.cursor = 'grabbing';
             }
 
+            // 2. 绘制骨骼
+            // 镜像变换
+            gestureCtx.translate(gestureCanvas.width, 0);
+            gestureCtx.scale(-1, 1);
+
+            // 应用动态缩放 (以手掌中心为原点)
+            if (isPinching && skeletonScale !== 1) {
+                // MediaPipe 坐标是 0-1，映射到 Canvas 像素坐标
+                // 注意：在 scale(-1, 1) 环境下，X 轴向左。
+                // 绘制函数内部会使用 ctx.canvas.width * landmark.x
+                // 我们的变换中心应该是 landmark[9] 的实际绘制位置。
+                const centerX = hand[9].x * gestureCanvas.width;
+                const centerY = hand[9].y * gestureCanvas.height;
+
+                gestureCtx.translate(centerX, centerY);
+                gestureCtx.scale(skeletonScale, skeletonScale);
+                gestureCtx.translate(-centerX, -centerY);
+            }
+
+            drawConnectors(gestureCtx, hand, HAND_CONNECTIONS, {
+                color: isPinching ? '#00d2ff' : 'rgba(255, 255, 255, 0.8)',
+                lineWidth: 3
+            });
+            drawLandmarks(gestureCtx, hand, {
+                color: isPinching ? '#ffffff' : '#7c99e4',
+                lineWidth: 1,
+                radius: 3
+            });
+
+            gestureCtx.restore();
+
         } else {
+            gestureCtx.restore();
             gestureStatus.innerText = "未检测到手部";
             isPinching = false;
         }
