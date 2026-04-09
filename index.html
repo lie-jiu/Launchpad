@@ -25,7 +25,7 @@
             --btn-hover-shadow: 0 10px 30px rgba(124, 153, 228, 0.35);
             --line-color: rgba(45, 52, 54, 0.08);
             --visualizer-color: #2d3436;
-            --text-main-rgb-comp: 45, 52, 54;
+            --particle-color: 45, 52, 54;
         }
 
         /* 暗黑模式变量 */
@@ -42,7 +42,7 @@
             --btn-hover-shadow: 0 10px 30px rgba(75, 108, 183, 0.35);
             --line-color: rgba(224, 231, 235, 0.08);
             --visualizer-color: #e0e7eb;
-            --text-main-rgb-comp: 224, 231, 235;
+            --particle-color: 224, 231, 235;
         }
 
         /* 基础样式 */
@@ -136,6 +136,7 @@
             transition: box-shadow 0.8s, background 0.8s;
             will-change: transform;
             user-select: none;
+            contain: layout style paint;
         }
 
         @keyframes liquidPopIn {
@@ -274,11 +275,15 @@
             background: var(--btn-bg);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s, opacity 0.6s;
             will-change: transform;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: slideUpLiquid 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 1;
+            transform: translateY(0);
+            contain: layout style paint;
+        }
+
+        .link-item.animate-in {
+            animation: slideUpLiquid 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         @keyframes slideUpLiquid {
@@ -301,11 +306,14 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: 1s ease;
+            transition: none;
+            opacity: 0;
         }
 
         .link-item:hover::after {
             left: 100%;
+            transition: left 0.8s ease;
+            opacity: 1;
         }
 
         .footer {
@@ -611,6 +619,29 @@
             vertical-align: middle;
         }
 
+        /* 加载提示 */
+        #loading-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--liquid-glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: var(--liquid-glass-border);
+            box-shadow: var(--card-shadow);
+            z-index: 10001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-weight: 600;
+        }
+
+        #loading-toast.show {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
@@ -636,13 +667,48 @@
             #webcam-preview {
                 display: none;
             }
+
+            .controls-group {
+                top: 15px;
+                right: 15px;
+            }
+
+            .music-control-group {
+                bottom: 15px;
+                left: 15px;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation: none !important; transition: none !important; }
             .music-visualizer { display: none !important; }
         }
-    </style>
+    
+        /* 控件初始显示 */
+        .controls-group,
+        .music-control-group {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .controls-group:hover,
+        .music-control-group:hover {
+            opacity: 1;
+        }
+
+        /* 确保按钮可见 */
+        .control-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .music-player {
+            opacity: 1;
+            transform: scale(1);
+        }
+</style>
+<base target="_blank">
 </head>
 <body>
 
@@ -652,13 +718,15 @@
 
 <div class="liquid-particles" id="liquid-particles-container"></div>
 
+<div id="loading-toast">加载中...</div>
+
 <div class="controls-group">
     <div class="control-btn" id="camera-toggle" title="开启手势控制">📷</div>
     <div class="control-btn" id="theme-toggle" title="切换主题">☀️</div>
 </div>
 
 <div class="music-control-group">
-    <div class="music-player" onclick="toggleMusic()" title="点击播放/暂停">
+    <div class="music-player" id="music-player" title="点击播放/暂停">
         <div class="music-disc">🎵</div>
         <audio id="bg-music" loop>
             <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
@@ -690,22 +758,22 @@
     </header>
 
     <section class="link-section">
-        <a class="link-item" href="https://github.com/lie-jiu" target="_blank" rel="noopener noreferrer"><span>💻 GitHub</span></a>
-        <a class="link-item" href="https://oj.liejiu.top" target="_blank" rel="noopener noreferrer"><span>🎈 在线评测</span></a>
-        <a class="link-item" href="https://blog.liejiu.top" target="_blank" rel="noopener noreferrer"><span>📝 个人博客</span></a>
-        <a class="link-item" href="mailto:liejiunb666@gmail.com" target="_blank" rel="noopener noreferrer"><span>📧 发送邮件</span></a>
+        <a class="link-item" href="https://github.com/lie-jiu" target="_blank" rel="noopener noreferrer" style="animation-delay: 0.1s"><span>💻 GitHub</span></a>
+        <a class="link-item" href="https://oj.liejiu.top" target="_blank" rel="noopener noreferrer" style="animation-delay: 0.2s"><span>🎈 在线评测</span></a>
+        <a class="link-item" href="https://blog.liejiu.top" target="_blank" rel="noopener noreferrer" style="animation-delay: 0.3s"><span>📝 个人博客</span></a>
+        <a class="link-item" href="mailto:liejiunb666@gmail.com" target="_blank" rel="noopener noreferrer" style="animation-delay: 0.4s"><span>📧 发送邮件</span></a>
     </section>
 
     <footer class="footer">
         <div>© 2025 Made with ❤️ by LieJiu</div>
 
         <div class="beian-container">
-            <a class="beian-link" href="https://beian.mps.gov.cn/#/query/webSearch?code=36110402000194" rel="noreferrer"
+            <a class="beian-link" href="https://beian.mps.gov.cn/#/query/webSearch?code=36110402000194" rel="noreferrer noopener"
                target="_blank">
                 <img alt="公安备案图标" class="beian-icon" src="https://beian.mps.gov.cn/favicon.ico">
                 赣公网安备36110402000194号
             </a>
-            <a class="beian-link" href="https://beian.miit.gov.cn/" target="_blank">
+            <a class="beian-link" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">
                 赣ICP备2025076709号-1
             </a>
         </div>
@@ -727,440 +795,426 @@
         numParticles: 12
     };
 
-    // 打字机效果
-    const typingElement = document.getElementById('typing-text');
-    let charIndex = 0;
-    let textMainRgbComp = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
+    // 全局状态管理
+    const state = {
+        isGestureActive: false,
+        isPinching: false,
+        currentRotateX: 0,
+        currentRotateY: 0,
+        currentTranslateX: 0,
+        currentTranslateY: 0,
+        currentScale: 1,
+        pinchStartX: 0,
+        pinchStartY: 0,
+        cardStartX: 0,
+        cardStartY: 0,
+        refHandSize: 0,
+        refCardScale: 1,
+        camera: null,
+        hands: null,
+        isMusicPlaying: false
+    };
 
-    function typeWriter() {
-        if (charIndex < config.typingText.length) {
-            typingElement.textContent += config.typingText.charAt(charIndex);
-            charIndex++;
-            setTimeout(typeWriter, config.typingSpeed);
-        }
+    // DOM 元素缓存
+    const elements = {
+        container: document.querySelector('.container'),
+        typingElement: document.getElementById('typing-text'),
+        toggleBtn: document.getElementById('theme-toggle'),
+        body: document.body,
+        cameraToggleBtn: document.getElementById('camera-toggle'),
+        videoElement: document.getElementById('webcam-video'),
+        webcamPreview: document.getElementById('webcam-preview'),
+        gestureStatus: document.getElementById('gesture-status'),
+        gestureCanvas: document.getElementById('gesture-canvas'),
+        gestureCtx: document.getElementById('gesture-canvas').getContext('2d'),
+        loadingToast: document.getElementById('loading-toast'),
+        musicPlayer: document.getElementById('music-player'),
+        bgMusic: document.getElementById('bg-music'),
+        visualizer: document.getElementById('visualizer')
+    };
+
+    // 工具函数：显示加载提示
+    function showLoading(text) {
+        elements.loadingToast.textContent = text;
+        elements.loadingToast.classList.add('show');
     }
 
-    window.onload = () => setTimeout(typeWriter, 1200);
+    function hideLoading() {
+        elements.loadingToast.classList.remove('show');
+    }
+
+    // 工具函数：防抖
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // 打字机效果
+    function typeWriter() {
+        let charIndex = 0;
+        function type() {
+            if (charIndex < config.typingText.length) {
+                elements.typingElement.textContent += config.typingText.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, config.typingSpeed);
+            }
+        }
+        type();
+    }
 
     // 主题切换
-    const toggleBtn = document.getElementById('theme-toggle');
-    const body = document.body;
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            elements.body.classList.add('dark-mode');
+            elements.toggleBtn.textContent = '🌙';
+        }
 
-    if (localStorage.getItem('theme') === 'dark') {
-        body.classList.add('dark-mode');
-        toggleBtn.textContent = '🌙';
+        elements.toggleBtn.addEventListener('click', () => {
+            elements.body.classList.toggle('dark-mode');
+            const isDark = elements.body.classList.contains('dark-mode');
+            elements.toggleBtn.textContent = isDark ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
     }
-
-    toggleBtn.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        toggleBtn.textContent = isDark ? '🌙' : '☀️';
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        textMainRgbComp = getComputedStyle(document.body).getPropertyValue('--text-main-rgb-comp').trim();
-    });
 
     // 随机飘落的Emoji
-    function createEmoji() {
-        const emoji = document.createElement('div');
-        emoji.className = 'falling-emoji';
-        emoji.innerText = config.liquidEmojis[Math.floor(Math.random() * config.liquidEmojis.length)];
-        emoji.style.left = Math.random() * 100 + 'vw';
-        emoji.style.animationDuration = (Math.random() * 7 + 8) + 's';
-        emoji.style.opacity = Math.random() * 0.3 + 0.1;
-        document.body.appendChild(emoji);
-        setTimeout(() => emoji.remove(), 15000);
-    }
-
-    let emojiInterval = setInterval(createEmoji, 800);
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            clearInterval(emojiInterval);
-        } else {
-            emojiInterval = setInterval(createEmoji, 800);
+    function initFallingEmojis() {
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.className = 'falling-emoji';
+            emoji.innerText = config.liquidEmojis[Math.floor(Math.random() * config.liquidEmojis.length)];
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.animationDuration = (Math.random() * 7 + 8) + 's';
+            emoji.style.opacity = Math.random() * 0.3 + 0.1;
+            document.body.appendChild(emoji);
+            setTimeout(() => emoji.remove(), 15000);
         }
-    });
+
+        let emojiInterval = setInterval(createEmoji, 800);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(emojiInterval);
+            } else {
+                emojiInterval = setInterval(createEmoji, 800);
+            }
+        });
+    }
 
     // 背景粒子效果
-    const particlesContainer = document.getElementById('liquid-particles-container');
+    function initBackgroundParticles() {
+        const particlesContainer = document.getElementById('liquid-particles-container');
 
-    function createParticle() {
-        const particle = document.createElement('div');
-        particle.className = 'liquid-particle';
-        const size = Math.random() * 100 + 50;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${Math.random() * 100}vw`;
-        particle.style.top = `${Math.random() * 100 + 100}vh`;
-        particle.style.animationDelay = `${Math.random() * 10}s`;
-        particle.style.animationDuration = `${Math.random() * 20 + 25}s`;
-        particlesContainer.appendChild(particle);
-        setTimeout(() => particle.remove(), 50000);
-    }
-
-    for (let i = 0; i < config.numParticles; i++) {
-        createParticle();
-    }
-
-    // 3D 视差与交互逻辑
-    const container = document.querySelector('.container');
-
-    // 初始化状态变量
-    let currentRotateX = 0;
-    let currentRotateY = 0;
-    let currentTranslateX = 0;
-    let currentTranslateY = 0;
-    let currentScale = 1;
-    let isGestureActive = false; // 是否开启手势
-
-    setTimeout(() => {
-        container.style.opacity = '1';
-        container.style.transform = 'translateY(0) scale(1)';
-        container.style.animation = 'none';
-
-        if (window.innerWidth > 768) {
-            // 鼠标移动事件 (如果手势未开启，则使用鼠标)
-            document.addEventListener('mousemove', (e) => {
-                if (isGestureActive) return; // 如果开启了摄像头，忽略鼠标视差
-
-                const sensitivity = 25;
-                const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
-                const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
-
-                // 更新当前状态
-                currentRotateY = -xAxis;
-                currentRotateX = yAxis;
-
-                updateContainerTransform();
-            });
-
-            document.addEventListener('mouseleave', () => {
-                if (isGestureActive) return;
-                currentRotateY = 0;
-                currentRotateX = 0;
-                updateContainerTransform();
-            });
-
-            document.addEventListener('mouseenter', () => {
-                if (isGestureActive) return;
-                container.style.transition = 'transform 0.1s ease-out';
-            });
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'liquid-particle';
+            const size = Math.random() * 100 + 50;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100 + 100}vh`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particle.style.animationDuration = `${Math.random() * 20 + 25}s`;
+            particlesContainer.appendChild(particle);
+            setTimeout(() => particle.remove(), 50000);
         }
-    }, 1500);
 
-    // 统一更新 Transform 函数
+        for (let i = 0; i < config.numParticles; i++) {
+            createParticle();
+        }
+    }
+
+    // 3D 视差效果
+    function initParallax() {
+        setTimeout(() => {
+            elements.container.style.opacity = '1';
+            elements.container.style.transform = 'translateY(0) scale(1)';
+            elements.container.style.animation = 'none';
+
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    if (state.isGestureActive) return;
+
+                    const sensitivity = 25;
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / sensitivity;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / sensitivity;
+
+                    state.currentRotateY = -xAxis;
+                    state.currentRotateX = yAxis;
+
+                    updateContainerTransform();
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    if (state.isGestureActive) return;
+                    state.currentRotateY = 0;
+                    state.currentRotateX = 0;
+                    updateContainerTransform();
+                });
+
+                document.addEventListener('mouseenter', () => {
+                    if (state.isGestureActive) return;
+                    elements.container.style.transition = 'transform 0.1s ease-out';
+                });
+            }
+        }, 1500);
+    }
+
+    // 统一更新 Transform
     function updateContainerTransform() {
-        container.style.transform = `
-            translate(${currentTranslateX}px, ${currentTranslateY}px)
-            rotateY(${currentRotateY}deg)
-            rotateX(${currentRotateX}deg)
-            scale(${currentScale})
+        elements.container.style.transform = `
+            translate(${state.currentTranslateX}px, ${state.currentTranslateY}px)
+            rotateY(${state.currentRotateY}deg)
+            rotateX(${state.currentRotateX}deg)
+            scale(${state.currentScale})
         `;
     }
 
-    // 点击屏幕生成波纹
-    document.addEventListener('click', function (e) {
-        if (e.target.closest('.music-player') || e.target.closest('a') || e.target.closest('.control-btn')) return;
+    // 点击波纹效果
+    function initRippleEffect() {
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.music-player') || e.target.closest('a') || e.target.closest('.control-btn')) return;
 
-        const ripple = document.createElement('div');
-        ripple.classList.add('ripple');
-        document.body.appendChild(ripple);
+            const ripple = document.createElement('div');
+            ripple.classList.add('ripple');
+            document.body.appendChild(ripple);
 
-        const size = 120;
-        ripple.style.width = size + 'px';
-        ripple.style.height = size + 'px';
-        ripple.style.left = e.clientX - size / 2 + 'px';
-        ripple.style.top = e.clientY - size / 2 + 'px';
+            const size = 120;
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = e.clientX - size / 2 + 'px';
+            ripple.style.top = e.clientY - size / 2 + 'px';
 
-        setTimeout(() => ripple.remove(), 800);
-    });
+            setTimeout(() => ripple.remove(), 800);
+        });
+    }
 
     // 音乐播放器控制
-    function toggleMusic() {
-        const audio = document.getElementById('bg-music');
-        const player = document.querySelector('.music-player');
-        const visualizer = document.getElementById('visualizer');
+    function initMusicPlayer() {
+        elements.musicPlayer.addEventListener('click', async () => {
+            try {
+                if (elements.bgMusic.paused) {
+                    await elements.bgMusic.play();
+                    elements.musicPlayer.classList.add('playing');
+                    elements.visualizer.classList.add('active');
+                    state.isMusicPlaying = true;
+                } else {
+                    elements.bgMusic.pause();
+                    elements.musicPlayer.classList.remove('playing');
+                    elements.visualizer.classList.remove('active');
+                    state.isMusicPlaying = false;
+                }
+            } catch (error) {
+                console.error("音乐播放失败:", error);
+                showLoading("请点击页面任意位置后再播放音乐");
+                setTimeout(hideLoading, 2000);
+            }
+        });
 
-        if (audio.paused) {
-            audio.play().catch(error => console.log("音乐播放被浏览器阻止"));
-            player.classList.add('playing');
-            visualizer.classList.add('active');
-        } else {
-            audio.pause();
-            player.classList.remove('playing');
-            visualizer.classList.remove('active');
-        }
+        // 处理自动播放被阻止的情况
+        elements.bgMusic.addEventListener('play', () => {
+            elements.musicPlayer.classList.add('playing');
+            elements.visualizer.classList.add('active');
+        });
+
+        elements.bgMusic.addEventListener('pause', () => {
+            elements.musicPlayer.classList.remove('playing');
+            elements.visualizer.classList.remove('active');
+        });
+
+        elements.bgMusic.addEventListener('error', (e) => {
+            console.error("音频加载错误:", e);
+            showLoading("音频加载失败");
+            setTimeout(hideLoading, 2000);
+        });
     }
 
-    // 交互式线条背景脚本
-    const canvas = document.getElementById('interactive-lines');
-    const ctx = canvas.getContext('2d');
-    let particlesArray;
-    let mouse = {
-        x: null,
-        y: null,
-        radius: 150
-    }
+    // 交互式线条背景（使用CSS变量动态颜色）
+    function initParticleNetwork() {
+        const canvas = document.getElementById('interactive-lines');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+        let mouse = { x: null, y: null, radius: 150 };
+        let animationId;
 
-    window.addEventListener('resize', () => {
+        const resizeCanvas = debounce(() => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }, 200);
+
+        window.addEventListener('resize', resizeCanvas);
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                // 使用CSS变量获取颜色
+                const isDark = elements.body.classList.contains('dark-mode');
+                const rgb = getComputedStyle(elements.body).getPropertyValue('--particle-color').trim();
+                ctx.fillStyle = `rgba(${rgb}, 0.15)`;
+                ctx.fill();
+            }
+
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
+                        this.x += 5;
+                    }
+                    if (mouse.x > this.x && this.x > this.size * 10) {
+                        this.x -= 5;
+                    }
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
+                        this.y += 5;
+                    }
+                    if (mouse.y > this.y && this.y > this.size * 10) {
+                        this.y -= 5;
+                    }
+                }
+
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = Math.min(100, (canvas.height * canvas.width) / 9000);
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 3) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 1) - 0.5;
+                let directionY = (Math.random() * 1) - 0.5;
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size));
+            }
+        }
+
+        function connect() {
+            const isDark = elements.body.classList.contains('dark-mode');
+            const rgb = getComputedStyle(elements.body).getPropertyValue('--particle-color').trim();
+
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a + 1; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distanceSquared = dx * dx + dy * dy;
+
+                    if (distanceSquared < (canvas.width / 7) * (canvas.height / 7)) {
+                        let opacityValue = 1 - (distanceSquared / 20000);
+                        ctx.strokeStyle = `rgba(${rgb}, ${opacityValue * 0.15})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
         initParticles();
-    });
+        animate();
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    window.addEventListener('mousemove', (event) => {
-        mouse.x = event.x;
-        mouse.y = event.y;
-    });
-
-    window.addEventListener('mouseout', () => {
-        mouse.x = undefined;
-        mouse.y = undefined;
-    });
-
-    class Particle {
-        constructor(x, y, directionX, directionY, size, color) {
-            this.x = x;
-            this.y = y;
-            this.directionX = directionX;
-            this.directionY = directionY;
-            this.size = size;
-            this.color = color;
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-            const isDark = document.body.classList.contains('dark-mode');
-            ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(45, 52, 54, 0.15)';
-            ctx.fill();
-        }
-
-        update() {
-            if (this.x > canvas.width || this.x < 0) {
-                this.directionX = -this.directionX;
-            }
-            if (this.y > canvas.height || this.y < 0) {
-                this.directionY = -this.directionY;
-            }
-
-            let dx = mouse.x - this.x;
-            let dy = mouse.y - this.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < mouse.radius + this.size) {
-                if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-                    this.x += 5;
-                }
-                if (mouse.x > this.x && this.x > this.size * 10) {
-                    this.x -= 5;
-                }
-                if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-                    this.y += 5;
-                }
-                if (mouse.y > this.y && this.y > this.size * 10) {
-                    this.y -= 5;
-                }
-            }
-
-            this.x += this.directionX;
-            this.y += this.directionY;
-            this.draw();
-        }
+        // 清理函数
+        window.addEventListener('beforeunload', () => {
+            cancelAnimationFrame(animationId);
+        });
     }
-
-    function initParticles() {
-        particlesArray = [];
-        let numberOfParticles = Math.min(150, (canvas.height * canvas.width) / 9000);
-        for (let i = 0; i < numberOfParticles; i++) {
-            let size = (Math.random() * 3) + 1;
-            let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-            let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-            let directionX = (Math.random() * 1) - 0.5;
-            let directionY = (Math.random() * 1) - 0.5;
-
-            particlesArray.push(new Particle(x, y, directionX, directionY, size));
-        }
-    }
-
-    function connect() {
-        let opacityValue = 1;
-        for (let a = 0; a < particlesArray.length; a++) {
-            for (let b = a; b < particlesArray.length; b++) {
-                let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
-                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-
-                if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                    opacityValue = 1 - (distance / 20000);
-                    const isDark = document.body.classList.contains('dark-mode');
-                    ctx.strokeStyle = isDark
-                        ? `rgba(224, 231, 235, ${opacityValue * 0.15})`
-                        : `rgba(45, 52, 54, ${opacityValue * 0.15})`;
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                    ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-
-    function animateParticles() {
-        requestAnimationFrame(animateParticles);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particlesArray.length; i++) {
-            particlesArray[i].update();
-        }
-        connect();
-    }
-
-    initParticles();
-    animateParticles();
 
     // 按钮吸附效果
-    const buttons = document.querySelectorAll('.link-item');
-    buttons.forEach(btn => {
-        const span = btn.querySelector('span');
-        btn.addEventListener('mousemove', (e) => {
-            if (window.innerWidth <= 768) return;
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            btn.style.animation = 'none';
-            btn.style.opacity = '1';
-            const strength = 0.15;
-            const moveX = x * strength;
-            const moveY = y * strength - 6;
-            btn.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s';
-            btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`;
-            if (span) {
-                span.style.transition = 'transform 0.1s ease-out';
-                span.style.transform = `translate(${x * 0.08}px, ${y * 0.08}px)`;
-            }
-        });
+    function initMagneticButtons() {
+        const buttons = document.querySelectorAll('.link-item');
+        buttons.forEach(btn => {
+            const span = btn.querySelector('span');
 
-        btn.addEventListener('mouseleave', (e) => {
-            btn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s';
-            btn.style.transform = '';
-            if (span) {
-                span.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                span.style.transform = '';
-            }
+            btn.addEventListener('mousemove', (e) => {
+                if (window.innerWidth <= 768) return;
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.animation = 'none';
+                btn.style.opacity = '1';
+                const strength = 0.15;
+                const moveX = x * strength;
+                const moveY = y * strength - 6;
+                btn.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s';
+                btn.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`;
+                if (span) {
+                    span.style.transition = 'transform 0.1s ease-out';
+                    span.style.transform = `translate(${x * 0.08}px, ${y * 0.08}px)`;
+                }
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s';
+                btn.style.transform = '';
+                if (span) {
+                    span.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    span.style.transform = '';
+                }
+            });
         });
-    });
+    }
 
     // -----------------------------------------------------------
     // 单手手势控制逻辑 (MediaPipe Hands)
     // -----------------------------------------------------------
 
-    const videoElement = document.getElementById('webcam-video');
-    const cameraToggleBtn = document.getElementById('camera-toggle');
-    const webcamPreview = document.getElementById('webcam-preview');
-    const gestureStatus = document.getElementById('gesture-status');
-    const gestureCanvas = document.getElementById('gesture-canvas');
-    const gestureCtx = gestureCanvas.getContext('2d');
-
-    let camera = null;
-    let hands = null;
-
-    // 状态变量
-    let isPinching = false;
-    let pinchStartX = 0;
-    let pinchStartY = 0;
-    let cardStartX = 0;
-    let cardStartY = 0;
-
-    // 缩放基准
-    let refHandSize = 0; // 捏合开始时手的大小
-    let refCardScale = 1; // 捏合开始时卡片的大小
-
-    cameraToggleBtn.addEventListener('click', () => {
-        if (!isGestureActive) {
-            startCamera();
-        } else {
-            stopCamera();
-        }
-    });
-
-    // 处理窗口大小变化，重置canvas尺寸
-    function resizeCanvas() {
-        gestureCanvas.width = window.innerWidth;
-        gestureCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); // 初始化调用一次
-
-    async function startCamera() {
-        if (!hands) {
-            gestureStatus.innerText = "加载模型中...";
-            hands = new Hands({locateFile: (file) => {
-                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-                }});
-
-            hands.setOptions({
-                maxNumHands: 1, // 强制单手
-                modelComplexity: 1,
-                minDetectionConfidence: 0.5,
-                minTrackingConfidence: 0.5
-            });
-
-            hands.onResults(onResults);
-        }
-
-        if (!camera) {
-            camera = new Camera(videoElement, {
-                onFrame: async () => {
-                    await hands.send({image: videoElement});
-                },
-                width: 320,
-                height: 240
-            });
-        }
-
-        try {
-            await camera.start();
-            isGestureActive = true;
-            cameraToggleBtn.classList.add('camera-active');
-            webcamPreview.classList.add('show');
-            gestureCanvas.classList.add('active'); // 显示骨骼画布
-            gestureStatus.innerText = "摄像头已启动";
-
-            // 切换为快速响应模式
-            container.style.transition = 'transform 0.05s linear, box-shadow 0.8s, background 0.8s';
-
-        } catch (error) {
-            console.error("Camera start failed:", error);
-            alert("无法访问摄像头，请检查权限。");
-            gestureStatus.innerText = "启动失败";
-        }
+    function resizeGestureCanvas() {
+        elements.gestureCanvas.width = window.innerWidth;
+        elements.gestureCanvas.height = window.innerHeight;
     }
 
-    function stopCamera() {
-        if (camera) {
-            camera.stop();
-            camera = null;
-        }
-        isGestureActive = false;
-        cameraToggleBtn.classList.remove('camera-active');
-        webcamPreview.classList.remove('show');
-        gestureCanvas.classList.remove('active');
-        gestureCtx.clearRect(0, 0, gestureCanvas.width, gestureCanvas.height);
-
-        // 恢复原有状态
-        currentTranslateX = 0;
-        currentTranslateY = 0;
-        currentRotateX = 0;
-        currentRotateY = 0;
-        currentScale = 1;
-
-        container.style.transition = 'transform 0.5s ease-out, box-shadow 0.8s, background 0.8s';
-        updateContainerTransform();
-    }
-
-    // 映射函数：增加灵敏度
     function mapCursor(value) {
         const minRange = 0.2;
         const maxRange = 0.8;
@@ -1168,34 +1222,37 @@
         return Math.max(0, Math.min(1, normalized));
     }
 
-    // 判断捏合
-    function isHandPinchingFunc(landmarks) {
+    function isHandPinching(landmarks) {
         const indexTip = landmarks[8];
         const thumbTip = landmarks[4];
         const distance = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
         return distance < 0.05;
     }
 
-    // 计算手掌大小（作为距离参考）
     function getHandSize(landmarks) {
         const wrist = landmarks[0];
         const middleMCP = landmarks[9];
         return Math.hypot(wrist.x - middleMCP.x, wrist.y - middleMCP.y);
     }
 
-    function onResults(results) {
-        if (!isGestureActive) return;
+    function onGestureResults(results) {
+        if (!state.isGestureActive) return;
 
-        // 1. 清空画布
-        gestureCtx.save();
-        gestureCtx.clearRect(0, 0, gestureCanvas.width, gestureCanvas.height);
+        // 防御性检查：确保Canvas尺寸正确
+        if (elements.gestureCanvas.width !== window.innerWidth || 
+            elements.gestureCanvas.height !== window.innerHeight) {
+            resizeGestureCanvas();
+        }
+
+        elements.gestureCtx.save();
+        elements.gestureCtx.setTransform(1, 0, 0, 1, 0, 0);
+        elements.gestureCtx.clearRect(0, 0, elements.gestureCanvas.width, elements.gestureCanvas.height);
 
         let skeletonScale = 1;
 
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             const hand = results.multiHandLandmarks[0];
 
-            // 逻辑处理：计算卡片缩放
             const indexTip = hand[8];
             const palmCenter = hand[9];
 
@@ -1204,94 +1261,194 @@
             const cursorX = mapCursor(rawX) * window.innerWidth;
             const cursorY = mapCursor(rawY) * window.innerHeight;
 
-            const isCurrentlyPinching = isHandPinchingFunc(hand);
+            const isCurrentlyPinching = isHandPinching(hand);
             const currentHandSize = getHandSize(hand);
 
             if (!isCurrentlyPinching) {
-                isPinching = false;
-                container.style.cursor = 'default';
+                state.isPinching = false;
+                elements.container.style.cursor = 'default';
 
                 // 视差悬停
                 const x = (0.5 - palmCenter.x) * 2;
                 const y = (0.5 - palmCenter.y) * 2;
-                currentRotateY = x * 15;
-                currentRotateX = y * 15;
-                gestureStatus.innerText = "🖐️ 张开: 悬停 / 移动视角";
+                state.currentRotateY = x * 15;
+                state.currentRotateX = y * 15;
+                elements.gestureStatus.innerText = "🖐️ 张开: 悬停 / 移动视角";
 
             } else {
                 // 捏合模式
-                if (!isPinching) {
-                    isPinching = true;
-                    pinchStartX = cursorX;
-                    pinchStartY = cursorY;
-                    cardStartX = currentTranslateX;
-                    cardStartY = currentTranslateY;
-                    refHandSize = currentHandSize;
-                    refCardScale = currentScale;
+                if (!state.isPinching) {
+                    state.isPinching = true;
+                    state.pinchStartX = cursorX;
+                    state.pinchStartY = cursorY;
+                    state.cardStartX = state.currentTranslateX;
+                    state.cardStartY = state.currentTranslateY;
+                    state.refHandSize = currentHandSize;
+                    state.refCardScale = state.currentScale;
                 }
 
                 // 拖拽
-                const deltaX = cursorX - pinchStartX;
-                const deltaY = cursorY - pinchStartY;
-                currentTranslateX = cardStartX + deltaX;
-                currentTranslateY = cardStartY + deltaY;
+                const deltaX = cursorX - state.pinchStartX;
+                const deltaY = cursorY - state.pinchStartY;
+                state.currentTranslateX = state.cardStartX + deltaX;
+                state.currentTranslateY = state.cardStartY + deltaY;
 
                 // 缩放卡片
-                if (refHandSize > 0) {
-                    const ratio = currentHandSize / refHandSize;
-                    let newScale = refCardScale / ratio;
+                if (state.refHandSize > 0) {
+                    const ratio = currentHandSize / state.refHandSize;
+                    let newScale = state.refCardScale / ratio;
                     newScale = Math.max(0.4, Math.min(newScale, 1.8));
-                    currentScale = newScale;
-
-                    // 计算骨骼缩放 (反向透视，与卡片同步)
-                    // 手越近(ratio>1)，骨骼应越小。手越远(ratio<1)，骨骼应越大。
-                    // 使用平方级反比来抵消并反转自然的透视效果
+                    state.currentScale = newScale;
                     skeletonScale = Math.pow(1 / ratio, 2.2);
                 }
 
-                gestureStatus.innerText = "🤏 捏合: 移动 + 前推缩小/后拉放大";
-                container.style.cursor = 'grabbing';
+                elements.gestureStatus.innerText = "🤏 捏合: 移动 + 前推缩小/后拉放大";
+                elements.container.style.cursor = 'grabbing';
             }
 
-            // 2. 绘制骨骼
-            // 镜像变换
-            gestureCtx.translate(gestureCanvas.width, 0);
-            gestureCtx.scale(-1, 1);
+            // 绘制骨骼
+            elements.gestureCtx.translate(elements.gestureCanvas.width, 0);
+            elements.gestureCtx.scale(-1, 1);
 
-            // 应用动态缩放 (以手掌中心为原点)
-            if (isPinching && skeletonScale !== 1) {
-                // MediaPipe 坐标是 0-1，映射到 Canvas 像素坐标
-                // 注意：在 scale(-1, 1) 环境下，X 轴向左。
-                // 绘制函数内部会使用 ctx.canvas.width * landmark.x
-                // 我们的变换中心应该是 landmark[9] 的实际绘制位置。
-                const centerX = hand[9].x * gestureCanvas.width;
-                const centerY = hand[9].y * gestureCanvas.height;
+            if (state.isPinching && skeletonScale !== 1) {
+                const centerX = hand[9].x * elements.gestureCanvas.width;
+                const centerY = hand[9].y * elements.gestureCanvas.height;
 
-                gestureCtx.translate(centerX, centerY);
-                gestureCtx.scale(skeletonScale, skeletonScale);
-                gestureCtx.translate(-centerX, -centerY);
+                elements.gestureCtx.translate(centerX, centerY);
+                elements.gestureCtx.scale(skeletonScale, skeletonScale);
+                elements.gestureCtx.translate(-centerX, -centerY);
             }
 
-            drawConnectors(gestureCtx, hand, HAND_CONNECTIONS, {
-                color: isPinching ? '#00d2ff' : 'rgba(255, 255, 255, 0.8)',
+            drawConnectors(elements.gestureCtx, hand, HAND_CONNECTIONS, {
+                color: state.isPinching ? '#00d2ff' : 'rgba(255, 255, 255, 0.8)',
                 lineWidth: 3
             });
-            drawLandmarks(gestureCtx, hand, {
-                color: isPinching ? '#ffffff' : '#7c99e4',
+            drawLandmarks(elements.gestureCtx, hand, {
+                color: state.isPinching ? '#ffffff' : '#7c99e4',
                 lineWidth: 1,
                 radius: 3
             });
 
-            gestureCtx.restore();
+            elements.gestureCtx.restore();
 
         } else {
-            gestureCtx.restore();
-            gestureStatus.innerText = "未检测到手部";
-            isPinching = false;
+            elements.gestureCtx.restore();
+            elements.gestureStatus.innerText = "未检测到手部";
+            state.isPinching = false;
         }
 
         updateContainerTransform();
     }
+
+    async function startCamera() {
+        showLoading("正在启动摄像头...");
+
+        try {
+            if (!state.hands) {
+                elements.gestureStatus.innerText = "加载模型中...";
+                state.hands = new Hands({locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                }});
+
+                state.hands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+
+                state.hands.onResults(onGestureResults);
+            }
+
+            if (!state.camera) {
+                state.camera = new Camera(elements.videoElement, {
+                    onFrame: async () => {
+                        await state.hands.send({image: elements.videoElement});
+                    },
+                    width: 320,
+                    height: 240
+                });
+            }
+
+            await state.camera.start();
+            state.isGestureActive = true;
+            elements.cameraToggleBtn.classList.add('camera-active');
+            elements.webcamPreview.classList.add('show');
+            elements.gestureCanvas.classList.add('active');
+            elements.gestureStatus.innerText = "摄像头已启动";
+            elements.container.style.transition = 'transform 0.05s linear, box-shadow 0.8s, background 0.8s';
+
+            hideLoading();
+        } catch (error) {
+            console.error("Camera start failed:", error);
+            hideLoading();
+            showLoading("无法访问摄像头，请检查权限");
+            setTimeout(hideLoading, 3000);
+            elements.gestureStatus.innerText = "启动失败";
+
+            // 清理资源
+            if (state.camera) {
+                state.camera = null;
+            }
+        }
+    }
+
+    function stopCamera() {
+        if (state.camera) {
+            state.camera.stop();
+            state.camera = null;
+        }
+        state.isGestureActive = false;
+        state.isPinching = false;
+        elements.cameraToggleBtn.classList.remove('camera-active');
+        elements.webcamPreview.classList.remove('show');
+        elements.gestureCanvas.classList.remove('active');
+        elements.gestureCtx.clearRect(0, 0, elements.gestureCanvas.width, elements.gestureCanvas.height);
+
+        // 恢复原有状态
+        state.currentTranslateX = 0;
+        state.currentTranslateY = 0;
+        state.currentRotateX = 0;
+        state.currentRotateY = 0;
+        state.currentScale = 1;
+
+        elements.container.style.transition = 'transform 0.5s ease-out, box-shadow 0.8s, background 0.8s';
+        updateContainerTransform();
+        elements.gestureStatus.innerText = "等待开启...";
+    }
+
+    function initGestureControl() {
+        window.addEventListener('resize', debounce(resizeGestureCanvas, 100));
+        resizeGestureCanvas();
+
+        elements.cameraToggleBtn.addEventListener('click', () => {
+            if (!state.isGestureActive) {
+                startCamera();
+            } else {
+                stopCamera();
+            }
+        });
+    }
+
+    // 初始化所有功能
+    function init() {
+        window.onload = () => {
+            setTimeout(typeWriter, 1200);
+        };
+
+        initTheme();
+        initFallingEmojis();
+        initBackgroundParticles();
+        initParallax();
+        initRippleEffect();
+        initMusicPlayer();
+        initParticleNetwork();
+        initMagneticButtons();
+        initGestureControl();
+    }
+
+    // 启动
+    init();
 </script>
 </body>
 </html>
